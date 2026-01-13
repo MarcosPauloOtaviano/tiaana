@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salgados da Tia Ana – Sabor de Casa</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -12,9 +13,8 @@
             --primary: #e63946;
             --text: #4a4a4a;
             --success: #25D366;
-            --pix-color: #32BCAD;
+            --mp-color: #009ee3;
             --bg: #fdfbf7;
-            --warm-bg: #fff8e1;
         }
 
         body {
@@ -25,7 +25,7 @@
             padding-bottom: 100px;
         }
 
-        /* --- ESTRUTURA DO TOPO (NOVO LAYOUT) --- */
+        /* --- LAYOUT --- */
         .header-container {
             background: white;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -36,27 +36,20 @@
             position: relative;
         }
 
-        /* 1. O BANNER NO TOPO */
         .header-banner {
             width: 100%;
-            height: 200px; /* Altura do banner */
+            height: 200px;
             background-color: #eee;
-            
-            /* SUA IMAGEM AQUI */
             background-image: url('fundo.jpg'); 
-            
             background-size: cover;
             background-position: center;
         }
 
-        /* 2. A CONSTRUÇÃO DA MARCA (Logo + Texto) */
         .header-content {
             padding: 0 20px 40px 20px;
             text-align: center;
             position: relative;
-            background: white; /* Fundo branco para o texto */
-            
-            /* Arredondamento para subir em cima do banner */
+            background: white;
             margin-top: -20px; 
             border-top-left-radius: 30px;
             border-top-right-radius: 30px;
@@ -66,7 +59,7 @@
             width: 110px; height: 110px;
             background-color: white;
             border-radius: 50%;
-            margin: -60px auto 15px; /* Sobe a logo para ficar metade no banner */
+            margin: -60px auto 15px;
             border: 5px solid white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             display: flex; align-items: center; justify-content: center;
@@ -91,7 +84,6 @@
             color: #5d4037;
         }
 
-        /* 3. O BOTÃO VER DELÍCIAS */
         .btn-descer {
             background: var(--primary);
             color: white;
@@ -108,7 +100,6 @@
         }
         .btn-descer:hover { transform: scale(1.05); }
 
-        /* --- RESTO DO SITE (Manter igual) --- */
         .container {
             max-width: 800px; margin: 0 auto; padding: 0 15px;
             position: relative; z-index: 10;
@@ -125,7 +116,6 @@
             font-size: 15px; margin-bottom: 25px; font-weight: bold;
         }
 
-        /* GRID */
         .product-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
         }
@@ -155,7 +145,6 @@
             margin-top: 5px; box-shadow: 0 4px 6px rgba(211, 84, 0, 0.2);
         }
 
-        /* FLUTUANTE */
         .cart-float-btn {
             position: fixed; bottom: 20px; right: 20px;
             background-color: var(--success); color: white;
@@ -172,7 +161,6 @@
             justify-content: center; font-size: 12px; font-weight: 900;
         }
 
-        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 2000; display: none;
@@ -195,24 +183,15 @@
         .modal-body { flex-grow: 1; overflow-y: auto; }
         .cart-item-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 15px; }
         
-        /* AJUSTES DE PREÇO NO MODAL */
         .price-container {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            text-align: right; display: flex; flex-direction: column; align-items: flex-end;
         }
         .price-old {
-            text-decoration: line-through;
-            color: #999;
-            font-size: 16px;
-            margin-bottom: 2px;
-            display: none; 
+            text-decoration: line-through; color: #999; font-size: 16px; margin-bottom: 2px; display: none; 
         }
         .checkout-total { font-size: 26px; font-weight: 800; color: var(--success); display: block; }
         .discount-tag { font-size: 13px; color: #d35400; display: block; text-align: right; font-weight: bold; margin-bottom: 10px; }
 
-        /* INPUTS e FORMA DE ENTREGA */
         .checkout-input {
             width: 100%; padding: 15px; border: 2px solid #eee; background: #fafafa;
             border-radius: 12px; font-size: 16px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Quicksand', sans-serif;
@@ -231,22 +210,22 @@
         .date-inputs { display: none; gap: 10px; margin-bottom: 15px; }
         .date-inputs input { flex: 1; }
 
-        /* PAGAMENTO */
-        .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        
+        /* Botões de Pagamento */
         .pay-option {
-            border: 2px solid #eee; padding: 12px; text-align: center; border-radius: 12px;
-            cursor: pointer; font-weight: bold; color: #888; transition: 0.2s;
+            border: 2px solid #eee; padding: 15px; text-align: center; border-radius: 12px;
+            cursor: pointer; font-weight: bold; color: #888; transition: 0.2s; display: block;
         }
         .pay-option.selected { border-color: #555; background: #eee; color: #333; }
-        .pay-option.pix-selected { border-color: var(--pix-color); background: #f0fffd; color: var(--pix-color); }
-
-        .pix-area {
-            background: #f0fffd; border: 1px solid #bcece7; border-radius: 12px;
-            padding: 15px; margin-bottom: 15px; text-align: center; display: none;
+        
+        .pay-option-mp {
+            border: none; padding: 16px; text-align: center; border-radius: 12px;
+            cursor: pointer; font-weight: bold; color: white; background: var(--mp-color);
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 4px 10px rgba(0, 158, 227, 0.3); font-size: 16px;
         }
-        #qrcode-container { display: flex; justify-content: center; margin: 10px 0; }
-        #qrcode-container img { border: 5px solid white; border-radius: 8px; }
-        .btn-copy-pix { background: var(--pix-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 5px; font-weight: bold; }
+        .pay-option-mp:hover { filter: brightness(0.95); }
 
         .btn-finalizar {
             width: 100%; background: var(--success); color: white; border: none; padding: 16px;
@@ -259,17 +238,13 @@
 
 <header class="header-container">
     <div class="header-banner"></div>
-    
     <div class="header-content">
         <div class="avatar-vovo">👵</div> 
-        
         <h1 class="welcome-title">O tempero que abraça</h1>
-        
         <div class="welcome-text">
             <p>Ôh meu filho, puxa uma cadeira e sinta-se em casa!</p>
             <p>Aqui na <strong>Tia Ana</strong> não tem segredo, tem carinho. Nossa massa é fresquinha, feita devagarinho, com aquele cuidado de quem tá esperando visita boa.</p>
         </div>
-
         <button class="btn-descer" onclick="document.getElementById('cardapio-area').scrollIntoView({behavior: 'smooth'})">
             Ver as Delícias 👇
         </button>
@@ -278,13 +253,11 @@
 
 <div class="container" id="cardapio-area">
     <h2 class="section-title">Nossas Quitandas</h2>
-    
     <div class="promo-banner">
         🔥 <strong>Promoção Progressiva:</strong><br>
-        📦 Acima de 50 un: Desconto de atacado<br>
+        📦 Acima de 50 un: Desconto da tia Ana<br>
         📦 Acima de 100 un: Super desconto!
     </div>
-
     <div class="product-grid" id="gridProdutos"></div>
 </div>
 
@@ -326,24 +299,20 @@
                 <input type="time" id="inputHora" class="checkout-input">
             </div>
 
-            <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; text-align:left;">Pagamento:</div>
+            <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; text-align:left;">Como vai pagar?</div>
+            
             <div class="payment-options">
-                <div class="pay-option selected" id="optEntrega" onclick="mudarPagamento('entrega')">
-                    💵 Na Entrega
+                <div class="pay-option-mp" id="btnPagarMP" onclick="pagarComMercadoPago()">
+                    Ⓜ️ Pagar Agora (Pix / Cartão)
                 </div>
-                <div class="pay-option" id="optPix" onclick="mudarPagamento('pix')">
-                    💠 Pix Agora
+
+                <div style="text-align:center; color:#ccc; font-size:12px; margin:5px 0;">ou</div>
+
+                <div class="pay-option selected" id="optEntrega" onclick="mudarPagamento('entrega')">
+                    💵 Pagar na Entrega (Dinheiro/Máquina)
                 </div>
             </div>
             
-            <div id="areaPix" class="pix-area">
-                <span class="pix-title">Escaneie o QR Code</span>
-                <div style="font-size:12px; color:#666;">Pague pelo app do banco e envie o comprovante:</div>
-                <div id="qrcode-container"></div>
-                <textarea id="pixCopiaCola" style="opacity:0; height:1px; width:1px;"></textarea>
-                <button class="btn-copy-pix" onclick="copiarPix()">Copiar Código Pix</button>
-            </div>
-
             <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
             
             <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">Enviar Pedido no Zap 📲</button>
@@ -354,38 +323,27 @@
 <script>
     // --- CONFIGURAÇÕES ---
     const WHATSAPP = "5535984167694";
-    const CHAVE_PIX_RAW = "35988440656"; 
-    const NOME_RECEBEDOR = "Tia Ana"; 
-    const CIDADE_RECEBEDOR = "GUAXUPE";
     
     // Níveis de Desconto
     const QTD_NIVEL_1 = 50;  
     const QTD_NIVEL_2 = 100; 
+    const DESC_NIVEL_1 = 0.05; 
+    const DESC_NIVEL_2 = 0.10; 
 
-    const DESC_NIVEL_1 = 0.05; // -0.05 (>=50)
-    const DESC_NIVEL_2 = 0.10; // -0.10 (>=100)
+    // --- MERCADO PAGO PUBLIC KEY ---
+    const MP_PUBLIC_KEY = "APP_USR-5051974679570399-011219-66fb0b485f1b3a4dd9d92834f87be8f2-3130093814"; 
 
+    const mp = new MercadoPago(MP_PUBLIC_KEY);
+
+    // --- PRODUTOS ---
     const PRODUTOS = [
-        {
-            nome: "Coxinha", preco: 0.80, 
-            imagem: "https://via.placeholder.com/400x250/e63946/ffffff?text=Coxinha",
-            opcoes: ["Frita na hora", "Congelada"]
-        },
-        {
-            nome: "Bolinha", preco: 0.80, 
-            imagem: "https://via.placeholder.com/400x250/ffb703/000000?text=Bolinha",
-            opcoes: ["Frita na hora", "Congelada"]
-        },
-        {
-            nome: "Esfirra", preco: 0.90, 
-            imagem: "https://via.placeholder.com/400x250/fb8500/ffffff?text=Esfirra",
-            opcoes: ["Assadinha", "Congelada"]
-        }
+        { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg", opcoes: ["Frita na hora", "Congelada"] },
+        { nome: "Bolinha", preco: 0.80, imagem: "bolinha.jpg", opcoes: ["Frita na hora", "Congelada"] },
+        { nome: "Esfirra", preco: 0.90, imagem: "esfirra.jpg", opcoes: ["Assadinha", "Congelada"] }
     ];
 
-    const CHAVE_PIX = "+55" + CHAVE_PIX_RAW; 
     let carrinho = [];
-    let metodoPagamento = 'entrega';
+    let metodoPagamento = 'entrega'; // Padrão
     let modoEntrega = 'now';
 
     document.addEventListener("DOMContentLoaded", () => { renderizarProdutos(); });
@@ -399,13 +357,16 @@
                 const icon = op.includes('Frita')||op.includes('Assadinha') ? '🔥' : '❄️';
                 opcoesHtml += `<option value="${op}">${icon} ${op}</option>`;
             });
+            
             let qtdHtml = '';
-            for(let i=5; i<=200; i+=5) qtdHtml += `<option value="${i}" ${i===25 ? 'selected' : ''}>${i} un.</option>`;
+            for(let i=25; i<=300; i+=25) {
+                qtdHtml += `<option value="${i}" ${i===25 ? 'selected' : ''}>${i} un.</option>`;
+            }
 
             const card = document.createElement('div');
             card.className = 'product-card';
             card.innerHTML = `
-                <div class="product-img-container"><img src="${prod.imagem}" class="product-img"></div>
+                <div class="product-img-container"><img src="${prod.imagem}" class="product-img" alt="${prod.nome}" onerror="this.src='https://via.placeholder.com/400x250?text=Foto+Indisponivel'"></div>
                 <div class="product-info">
                     <div class="product-header">
                         <h3 class="product-title">${prod.nome}</h3>
@@ -466,27 +427,20 @@
         let valorSemDesconto = 0;
         let valorComDesconto = 0;
         
-        // 1. Calcula Total e Preço Base
         carrinho.forEach(item => {
             qtdTotal += item.qtd;
             valorSemDesconto += (item.qtd * item.precoBase);
         });
 
-        // 2. Define o Desconto por Unidade
         let descontoPorUnidade = 0;
-        if (qtdTotal >= QTD_NIVEL_2) {
-            descontoPorUnidade = DESC_NIVEL_2;
-        } else if (qtdTotal >= QTD_NIVEL_1) {
-            descontoPorUnidade = DESC_NIVEL_1;
-        }
+        if (qtdTotal >= QTD_NIVEL_2) descontoPorUnidade = DESC_NIVEL_2;
+        else if (qtdTotal >= QTD_NIVEL_1) descontoPorUnidade = DESC_NIVEL_1;
 
-        // 3. Aplica
         carrinho.forEach(item => {
             let pFinal = item.precoBase - descontoPorUnidade;
             valorComDesconto += (item.qtd * pFinal);
         });
 
-        // UI Carrinho Flutuante
         if(qtdTotal > 0) {
             floatBtn.classList.remove('hidden');
             floatTotal.innerText = valorComDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
@@ -496,10 +450,8 @@
             floatTotal.innerText = "R$ 0,00";
         }
 
-        // UI Lista
         const lista = document.getElementById('listaItensModal');
         lista.innerHTML = '';
-
         if(carrinho.length === 0) lista.innerHTML = '<p style="text-align:center; color:#999;">Cesta vazia.</p>';
         else {
             carrinho.forEach(item => {
@@ -512,14 +464,11 @@
             });
         }
         
-        // UI Totais
         modalTotal.innerText = valorComDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
 
-        // MENSAGEM DE ECONOMIA (FORMATO "VOCÊ ECONOMIZOU")
         if(descontoPorUnidade > 0) {
             precoAntigoEl.style.display = 'block';
             precoAntigoEl.innerText = valorSemDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-            
             const economia = valorSemDesconto - valorComDesconto;
             msgEconomia.style.display = 'block';
             msgEconomia.innerText = `🎉 Você economizou ${economia.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}!`;
@@ -527,8 +476,6 @@
             precoAntigoEl.style.display = 'none';
             msgEconomia.style.display = 'none';
         }
-
-        if(metodoPagamento === 'pix' && valorComDesconto > 0) gerarQrCodePix(valorComDesconto.toFixed(2));
     }
 
     function mudarModoEntrega(modo) {
@@ -536,7 +483,6 @@
         const btnNow = document.getElementById('modeNow');
         const btnSch = document.getElementById('modeSchedule');
         const area = document.getElementById('areaAgendamento');
-        
         if(modo === 'now') {
             btnNow.classList.add('active'); btnSch.classList.remove('active');
             area.style.display = 'none';
@@ -548,57 +494,64 @@
 
     function mudarPagamento(metodo) {
         metodoPagamento = metodo;
-        const areaPix = document.getElementById('areaPix');
-        const btnZap = document.getElementById('btnZapAction');
         const optE = document.getElementById('optEntrega');
-        const optP = document.getElementById('optPix');
-
+        
         if(metodo === 'entrega') {
-            areaPix.style.display = 'none';
-            btnZap.innerText = "Enviar Pedido (Pagar na Entrega) 📲";
-            optE.classList.add('selected'); optP.classList.remove('selected', 'pix-selected');
+            optE.classList.add('selected');
         } else {
-            areaPix.style.display = 'block';
-            btnZap.innerText = "Já fiz o Pix, Enviar Pedido 📲";
-            optE.classList.remove('selected'); optP.classList.add('selected', 'pix-selected');
-            atualizarCarrinho(); 
+            optE.classList.remove('selected');
         }
     }
 
-    function gerarQrCodePix(valor) {
-        const div = document.getElementById('qrcode-container'); div.innerHTML = ""; 
-        const payload = PixPayload(CHAVE_PIX, NOME_RECEBEDOR, CIDADE_RECEBEDOR, valor, "SalgadosAna");
-        document.getElementById('pixCopiaCola').value = payload;
-        new QRCode(div, { text: payload, width: 150, height: 150, colorDark : "#333", colorLight : "#fff", correctLevel : QRCode.CorrectLevel.M });
-    }
+    // --- INTEGRAÇÃO MERCADO PAGO ---
+    async function pagarComMercadoPago() {
+        if(carrinho.length === 0) return alert("Sua cesta está vazia!");
 
-    function copiarPix() {
-        const txt = document.getElementById('pixCopiaCola');
-        txt.select(); txt.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(txt.value).then(() => {
-            const btn = document.querySelector('.btn-copy-pix');
-            btn.innerText = "Copiado! 👍"; setTimeout(() => btn.innerText = "Copiar Código Pix", 2000);
-        });
-    }
+        // Muda seleção visual
+        mudarPagamento('mp');
 
-    function PixPayload(chave, nome, cidade, valor, txid) {
-        const formatField = (id, value) => id + value.toString().length.toString().padStart(2, '0') + value.toString();
-        const crc16 = (payload) => {
-            let crc = 0xFFFF;
-            for (let i = 0; i < payload.length; i++) {
-                crc ^= payload.charCodeAt(i) << 8;
-                for (let j = 0; j < 8; j++) {
-                    if ((crc & 0x8000) !== 0) crc = (crc << 1) ^ 0x1021;
-                    else crc = crc << 1;
-                }
+        const btn = document.getElementById('btnPagarMP');
+        const txtOriginal = btn.innerHTML;
+        btn.innerHTML = "⌛ Abrindo Pagamento...";
+        btn.disabled = true;
+
+        let qtdTotal = 0; carrinho.forEach(i => qtdTotal += i.qtd);
+        let descontoPorUnidade = 0;
+        if (qtdTotal >= QTD_NIVEL_2) descontoPorUnidade = DESC_NIVEL_2;
+        else if (qtdTotal >= QTD_NIVEL_1) descontoPorUnidade = DESC_NIVEL_1;
+
+        const itensFormatados = carrinho.map(item => {
+            return {
+                title: `${item.nome} (${item.tipo})`,
+                quantity: item.qtd,
+                currency_id: 'BRL',
+                unit_price: Number((item.precoBase - descontoPorUnidade).toFixed(2))
             }
-            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
-        };
-        const merchantAccount = formatField("00", "br.gov.bcb.pix") + formatField("01", chave);
-        const user = nome.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        const city = cidade.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        let payload = formatField("00", "01") + formatField("26", merchantAccount) + formatField("52", "0000") + formatField("53", "986") + formatField("54", valor) + formatField("58", "BR") + formatField("59", user) + formatField("60", city) + formatField("62", formatField("05", txid || "***")) + "6304";
-        return payload + crc16(payload);
+        });
+
+        try {
+            const response = await fetch('/.netlify/functions/criar_pagamento', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: itensFormatados })
+            });
+            const data = await response.json();
+
+            if (data.id) {
+                mp.checkout({
+                    preference: { id: data.id },
+                    autoOpen: true
+                });
+            } else {
+                alert("Ocorreu um erro ao conectar com o Mercado Pago. Tente novamente.");
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Erro de conexão. Verifique se o site está atualizado.");
+        } finally {
+            btn.innerHTML = txtOriginal;
+            btn.disabled = false;
+        }
     }
 
     function abrirModal() { document.getElementById('modalOverlay').classList.add('active'); mudarPagamento('entrega'); }
@@ -608,14 +561,11 @@
         const nome = document.getElementById('nomeCliente').value.trim();
         if(!nome) return alert("Ôh meu anjo, escreve seu nome pra gente saber quem é!");
 
-        // Lógica de Agendamento
         let textoEntrega = "🛵 ENTREGA IMEDIATA";
         if(modoEntrega === 'schedule') {
             const data = document.getElementById('inputData').value;
             const hora = document.getElementById('inputHora').value;
             if(!data || !hora) return alert("Por favor, preencha a Data e a Hora da encomenda!");
-            
-            // Formatar Data BR
             const dataObj = new Date(data);
             const dataFormatada = dataObj.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
             textoEntrega = `📅 AGENDADO PARA: ${dataFormatada} às ${hora}`;
@@ -634,7 +584,12 @@
         });
         
         msg += `%0A📦 *Pagamento:* `;
-        msg += (metodoPagamento === 'pix') ? `✅ PAGO NO PIX (Ver Comp.)` : `💵 NA ENTREGA`;
+        // Lógica simples: se clicou no botão MP antes, assume que pagou por lá
+        if(metodoPagamento === 'mp') {
+             msg += `💳 PAGO VIA SITE (MERCADO PAGO/PIX)`;
+        } else {
+             msg += `💵 Pagar na Entrega (Dinheiro/Máquina)`;
+        }
 
         if(qtdTotal >= QTD_NIVEL_2) msg += `%0A🎉 _Super Desconto (>100un) Aplicado!_`;
         else if(qtdTotal >= QTD_NIVEL_1) msg += `%0A🎉 _Desconto de Atacado (>50un) Aplicado!_`;
