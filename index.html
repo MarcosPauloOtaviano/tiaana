@@ -161,6 +161,7 @@
             justify-content: center; font-size: 12px; font-weight: 900;
         }
 
+        /* MODAL */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 2000; display: none;
@@ -232,6 +233,21 @@
             font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px;
             box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
         }
+
+        /* Seção Oculta de Pagamento */
+        .hidden-section { display: none !important; }
+        .success-msg { 
+            background: #d4edda; color: #155724; padding: 10px; border-radius: 10px; 
+            text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #c3e6cb;
+        }
+        
+        /* AVISO IMPORTANTE */
+        .info-box {
+            background-color: #e3f2fd; color: #0d47a1; 
+            padding: 12px; border-radius: 12px; font-size: 14px; 
+            margin-bottom: 15px; text-align: center; 
+            border: 1px solid #bbdefb;
+        }
     </style>
 </head>
 <body>
@@ -288,34 +304,56 @@
                 <span id="msgEconomia" class="discount-tag" style="display:none;">🎉 Economia aplicada!</span>
             </div>
 
-            <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; margin-top:15px; text-align:left;">Para quando é?</div>
-            <div class="delivery-toggle">
-                <div class="toggle-opt active" id="modeNow" onclick="mudarModoEntrega('now')">Pra agora 🛵</div>
-                <div class="toggle-opt" id="modeSchedule" onclick="mudarModoEntrega('schedule')">Encomendar 📅</div>
-            </div>
-
-            <div class="date-inputs" id="areaAgendamento">
-                <input type="date" id="inputData" class="checkout-input">
-                <input type="time" id="inputHora" class="checkout-input">
-            </div>
-
-            <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; text-align:left;">Como vai pagar?</div>
-            
-            <div class="payment-options">
-                <div class="pay-option-mp" id="btnPagarMP" onclick="pagarComMercadoPago()">
-                    Ⓜ️ Pagar Agora (Pix Automático / Cartão)
+            <div id="step-dados">
+                <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; margin-top:15px; text-align:left;">Para quando é?</div>
+                <div class="delivery-toggle">
+                    <div class="toggle-opt active" id="modeNow" onclick="mudarModoEntrega('now')">Pra agora 🛵</div>
+                    <div class="toggle-opt" id="modeSchedule" onclick="mudarModoEntrega('schedule')">Encomendar 📅</div>
                 </div>
 
-                <div style="text-align:center; color:#ccc; font-size:12px; margin:5px 0;">ou</div>
+                <div class="date-inputs" id="areaAgendamento">
+                    <input type="date" id="inputData" class="checkout-input">
+                    <input type="time" id="inputHora" class="checkout-input">
+                </div>
 
-                <div class="pay-option selected" id="optEntrega" onclick="mudarPagamento('entrega')">
-                    💵 Pagar na Entrega (Dinheiro/Máquina)
+                <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; text-align:left;">Como pretende pagar?</div>
+                <div class="payment-options">
+                    <div class="pay-option" id="optMP" onclick="selecionarIntencaoPagamento('mp')">
+                        💳 Pagar pelo Site (Mercado Pago)
+                    </div>
+                    <div class="pay-option selected" id="optEntrega" onclick="selecionarIntencaoPagamento('entrega')">
+                        💵 Pagar na Entrega (Dinheiro/Máquina)
+                    </div>
+                </div>
+                
+                <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
+                
+                <div class="info-box">
+                    ℹ️ <strong>Importante:</strong> O pagamento será liberado na tela seguinte, logo após você enviar o pedido no WhatsApp!
+                </div>
+
+                <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">1. Enviar Pedido no Zap 📲</button>
+            </div>
+
+            <div id="step-pagamento" class="hidden-section">
+                <div class="success-msg">✅ Pedido Enviado no WhatsApp!</div>
+                
+                <div id="msg-entrega" class="hidden-section" style="text-align:center; color:#555; margin-bottom:20px;">
+                    Obrigado! Aguarde a confirmação da Tia Ana no Zap.
+                    <br><br>Separe o dinheiro ou o cartão para quando o entregador chegar. 🛵
+                </div>
+
+                <div id="area-mp" class="hidden-section">
+                    <div style="text-align:center; margin-bottom:10px; color:#555;">Agora finalize seu pagamento seguro:</div>
+                    <div class="pay-option-mp" id="btnPagarMP" onclick="pagarComMercadoPago()">
+                        2. Pagar Agora (Pix Automático / Cartão)
+                    </div>
+                </div>
+                
+                <div style="margin-top:20px; text-align:center;">
+                    <a href="#" onclick="fecharModal()" style="color:#999; text-decoration:none; font-size:14px;">Fechar e continuar comprando</a>
                 </div>
             </div>
-            
-            <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
-            
-            <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">Enviar Pedido no Zap 📲</button>
         </div>
     </div>
 </div>
@@ -343,7 +381,7 @@
     ];
 
     let carrinho = [];
-    let metodoPagamento = 'entrega'; // Começa selecionado 'entrega'
+    let intencaoPagamento = 'entrega'; // O que o cliente DIZ que vai fazer
     let modoEntrega = 'now';
 
     document.addEventListener("DOMContentLoaded", () => { renderizarProdutos(); });
@@ -358,19 +396,11 @@
                 opcoesHtml += `<option value="${op}">${icon} ${op}</option>`;
             });
             
-            // --- AQUI ESTÁ A ALTERAÇÃO DA QUANTIDADE MÍNIMA ---
             let qtdHtml = '';
-            
-            // 1. Adiciona a opção de 1 unidade para testes ou venda unitária
             qtdHtml += `<option value="1">1 un.</option>`;
-            
-            // 2. Continua com a lógica de 25 em 25
             for(let i=25; i<=300; i+=25) {
-                // Se quiser que o 25 continue selecionado por padrão, mantenha o código abaixo.
-                // Se quiser que o 1 venha selecionado, troque 'selected' de lugar.
                 qtdHtml += `<option value="${i}" ${i===25 ? 'selected' : ''}>${i} un.</option>`;
             }
-            // --------------------------------------------------
 
             const card = document.createElement('div');
             card.className = 'product-card';
@@ -501,23 +531,101 @@
         }
     }
 
-    function mudarPagamento(metodo) {
-        metodoPagamento = metodo;
+    function selecionarIntencaoPagamento(metodo) {
+        intencaoPagamento = metodo;
         const optE = document.getElementById('optEntrega');
+        const optMP = document.getElementById('optMP');
         
         if(metodo === 'entrega') {
             optE.classList.add('selected');
+            optMP.classList.remove('selected');
         } else {
             optE.classList.remove('selected');
+            optMP.classList.add('selected');
+            // Estilo visual de seleção no MP (borda azul)
+            optMP.style.border = "2px solid #009ee3";
+            optMP.style.background = "#f0fbff";
+            optE.style.border = "2px solid #eee";
+            optE.style.background = "white";
+        }
+    }
+
+    function abrirModal() { 
+        document.getElementById('modalOverlay').classList.add('active'); 
+        // Reseta o modal para o Passo 1
+        document.getElementById('step-dados').classList.remove('hidden-section');
+        document.getElementById('step-pagamento').classList.add('hidden-section');
+    }
+    
+    function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+    // --- LÓGICA DE ENVIO + TROCA DE TELA ---
+    function enviarZap() {
+        const nome = document.getElementById('nomeCliente').value.trim();
+        if(!nome) return alert("Ôh meu anjo, escreve seu nome pra gente saber quem é!");
+
+        // 1. Prepara Texto
+        let textoEntrega = "🛵 ENTREGA IMEDIATA";
+        if(modoEntrega === 'schedule') {
+            const data = document.getElementById('inputData').value;
+            const hora = document.getElementById('inputHora').value;
+            if(!data || !hora) return alert("Por favor, preencha a Data e a Hora da encomenda!");
+            const dataObj = new Date(data);
+            const dataFormatada = dataObj.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+            textoEntrega = `📅 AGENDADO PARA: ${dataFormatada} às ${hora}`;
+        }
+
+        let qtdTotal = 0; carrinho.forEach(i => qtdTotal += i.qtd);
+        const valorFinal = document.getElementById('modalTotalValor').innerText;
+        
+        let msg = `*👵 PEDIDO DA TIA ANA*%0A%0A`;
+        msg += `👤 *Cliente:* ${nome}%0A`;
+        msg += `💰 *Total:* ${valorFinal}%0A`;
+        msg += `🕒 *Tipo:* ${textoEntrega}%0A%0A`;
+        msg += `*O QUE VAI NA CESTA:*%0A`;
+        carrinho.forEach(item => {
+            msg += `▪️ ${item.qtd}x ${item.nome} (${item.tipo})%0A`;
+        });
+        
+        msg += `%0A📦 *Pagamento:* `;
+        if(intencaoPagamento === 'mp') {
+             msg += `💳 Vou pagar AGORA pelo Site (Mercado Pago)`;
+        } else {
+             msg += `💵 Vou pagar na Entrega (Dinheiro/Máquina)`;
+        }
+
+        if(qtdTotal >= QTD_NIVEL_2) msg += `%0A🎉 _Super Desconto (>100un) Aplicado!_`;
+        else if(qtdTotal >= QTD_NIVEL_1) msg += `%0A🎉 _Desconto de Atacado (>50un) Aplicado!_`;
+        
+        msg += `%0A%0A_Aguardando confirmação..._`;
+
+        // 2. Abre WhatsApp
+        window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
+
+        // 3. MUDA A TELA PARA PAGAMENTO (PASSO 2)
+        mostrarTelaPagamento();
+    }
+
+    function mostrarTelaPagamento() {
+        // Esconde Passo 1
+        document.getElementById('step-dados').classList.add('hidden-section');
+        
+        // Mostra Passo 2
+        document.getElementById('step-pagamento').classList.remove('hidden-section');
+        
+        // Decide qual mensagem mostrar
+        if(intencaoPagamento === 'mp') {
+            document.getElementById('area-mp').classList.remove('hidden-section');
+            document.getElementById('msg-entrega').classList.add('hidden-section');
+        } else {
+            document.getElementById('area-mp').classList.add('hidden-section');
+            document.getElementById('msg-entrega').classList.remove('hidden-section');
         }
     }
 
     // --- INTEGRAÇÃO MERCADO PAGO ---
     async function pagarComMercadoPago() {
         if(carrinho.length === 0) return alert("Sua cesta está vazia!");
-
-        // Muda seleção visual
-        mudarPagamento('mp');
 
         const btn = document.getElementById('btnPagarMP');
         const txtOriginal = btn.innerHTML;
@@ -561,50 +669,6 @@
             btn.innerHTML = txtOriginal;
             btn.disabled = false;
         }
-    }
-
-    function abrirModal() { document.getElementById('modalOverlay').classList.add('active'); mudarPagamento('entrega'); }
-    function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-
-    function enviarZap() {
-        const nome = document.getElementById('nomeCliente').value.trim();
-        if(!nome) return alert("Ôh meu anjo, escreve seu nome pra gente saber quem é!");
-
-        let textoEntrega = "🛵 ENTREGA IMEDIATA";
-        if(modoEntrega === 'schedule') {
-            const data = document.getElementById('inputData').value;
-            const hora = document.getElementById('inputHora').value;
-            if(!data || !hora) return alert("Por favor, preencha a Data e a Hora da encomenda!");
-            const dataObj = new Date(data);
-            const dataFormatada = dataObj.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
-            textoEntrega = `📅 AGENDADO PARA: ${dataFormatada} às ${hora}`;
-        }
-
-        let qtdTotal = 0; carrinho.forEach(i => qtdTotal += i.qtd);
-        const valorFinal = document.getElementById('modalTotalValor').innerText;
-        
-        let msg = `*👵 PEDIDO DA TIA ANA*%0A%0A`;
-        msg += `👤 *Cliente:* ${nome}%0A`;
-        msg += `💰 *Total:* ${valorFinal}%0A`;
-        msg += `🕒 *Tipo:* ${textoEntrega}%0A%0A`;
-        msg += `*O QUE VAI NA CESTA:*%0A`;
-        carrinho.forEach(item => {
-            msg += `▪️ ${item.qtd}x ${item.nome} (${item.tipo})%0A`;
-        });
-        
-        msg += `%0A📦 *Pagamento:* `;
-        // Lógica simples: se clicou no botão MP antes, assume que pagou por lá
-        if(metodoPagamento === 'mp') {
-             msg += `💳 PAGO VIA SITE (MERCADO PAGO/PIX)`;
-        } else {
-             msg += `💵 Pagar na Entrega (Dinheiro/Máquina)`;
-        }
-
-        if(qtdTotal >= QTD_NIVEL_2) msg += `%0A🎉 _Super Desconto (>100un) Aplicado!_`;
-        else if(qtdTotal >= QTD_NIVEL_1) msg += `%0A🎉 _Desconto de Atacado (>50un) Aplicado!_`;
-        
-        msg += `%0A%0A_Aguardando confirmação..._`;
-        window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
     }
 </script>
 </body>
