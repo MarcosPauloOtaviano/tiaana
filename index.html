@@ -303,7 +303,7 @@
             
             <div class="payment-options">
                 <div class="pay-option-mp" id="btnPagarMP" onclick="pagarComMercadoPago()">
-                    Ⓜ️ Pagar Agora (Pix / Cartão)
+                    Ⓜ️ Pagar Agora (Pix Automático / Cartão)
                 </div>
 
                 <div style="text-align:center; color:#ccc; font-size:12px; margin:5px 0;">ou</div>
@@ -331,7 +331,7 @@
     const DESC_NIVEL_2 = 0.10; 
 
     // --- MERCADO PAGO PUBLIC KEY ---
-    const MP_PUBLIC_KEY = "APP_USR-2236746318026888-011219-461db07c3f882f3b37ce032c1a7f846b-221843122"; 
+    const MP_PUBLIC_KEY = "APP_USR-5051974679570399-011219-66fb0b485f1b3a4dd9d92834f87be8f2-3130093814"; 
 
     const mp = new MercadoPago(MP_PUBLIC_KEY);
 
@@ -343,7 +343,7 @@
     ];
 
     let carrinho = [];
-    let metodoPagamento = 'entrega'; // Padrão
+    let metodoPagamento = 'entrega'; // Começa selecionado 'entrega'
     let modoEntrega = 'now';
 
     document.addEventListener("DOMContentLoaded", () => { renderizarProdutos(); });
