@@ -358,10 +358,19 @@
                 opcoesHtml += `<option value="${op}">${icon} ${op}</option>`;
             });
             
+            // --- AQUI ESTÁ A ALTERAÇÃO DA QUANTIDADE MÍNIMA ---
             let qtdHtml = '';
+            
+            // 1. Adiciona a opção de 1 unidade para testes ou venda unitária
+            qtdHtml += `<option value="1">1 un.</option>`;
+            
+            // 2. Continua com a lógica de 25 em 25
             for(let i=25; i<=300; i+=25) {
+                // Se quiser que o 25 continue selecionado por padrão, mantenha o código abaixo.
+                // Se quiser que o 1 venha selecionado, troque 'selected' de lugar.
                 qtdHtml += `<option value="${i}" ${i===25 ? 'selected' : ''}>${i} un.</option>`;
             }
+            // --------------------------------------------------
 
             const card = document.createElement('div');
             card.className = 'product-card';
