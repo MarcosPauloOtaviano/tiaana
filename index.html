@@ -6,7 +6,6 @@
     <title>Salgados da Tia Ana – Sabor de Casa</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
@@ -20,67 +19,48 @@
 
         body { font-family: 'Quicksand', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; }
         
-        /* HEADER */
+        /* HEADER RESTAURADO */
         .header-container { background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; overflow: hidden; margin-bottom: 30px; position: relative; }
-        .header-banner { width: 100%; height: 200px; background-image: url('fundo.jpg'); background-size: cover; background-position: center; background-color: #ddd; }
+        .header-banner { width: 100%; height: 200px; background-image: url('fundo.jpg'); background-size: cover; background-position: center; background-color: #eee; }
         .header-content { padding: 0 20px 40px 20px; text-align: center; position: relative; background: white; margin-top: -20px; border-top-left-radius: 30px; border-top-right-radius: 30px; }
-        .avatar-vovo { width: 110px; height: 110px; background-color: white; border-radius: 50%; margin: -60px auto 15px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .avatar-vovo { width: 110px; height: 110px; background-color: white; border-radius: 50%; margin: -60px auto 15px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; margin-left: auto; margin-right: auto; }
         .avatar-vovo img { width: 100%; height: 100%; object-fit: cover; }
+        
         .welcome-title { font-family: 'Caveat', cursive; font-size: 42px; color: #d35400; margin: 0; line-height: 1.1; }
+        .welcome-text { font-size: 16px; line-height: 1.6; max-width: 600px; margin: 15px auto; color: #5d4037; }
 
         /* PRODUTOS */
         .container { max-width: 800px; margin: 0 auto; padding: 0 15px; }
-        .section-title { text-align: center; font-family: 'Caveat', cursive; color: var(--primary); font-size: 32px; margin: 20px 0; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: transform 0.2s; }
-        .product-card:hover { transform: translateY(-5px); }
-        .product-img { width: 100%; height: 150px; object-fit: cover; background-color: #f9f9f9; }
+        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .product-img { width: 100%; height: 150px; object-fit: cover; }
         .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 10px; }
-        .product-title { font-weight: 700; font-size: 22px; margin: 0; color: #d35400; font-family: 'Caveat', cursive; }
+        .product-title { font-weight: 700; font-size: 22px; color: #d35400; font-family: 'Caveat', cursive; margin: 0; }
         .product-price { font-size: 18px; font-weight: bold; color: var(--primary); background: #fff0f0; padding: 5px 10px; border-radius: 10px; align-self: flex-start; }
-        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9; font-family: 'Quicksand', sans-serif; font-size: 14px; }
-        .btn-add { background: #d35400; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.2s; }
-        .btn-add:hover { background: #e67e22; }
+        select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #eee; font-family: 'Quicksand'; }
+        .btn-add { background: #d35400; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
-        /* CARRINHO FLUTUANTE */
-        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold; border: none; z-index: 100; display: none; font-family: 'Quicksand', sans-serif; font-size: 16px; transition: transform 0.2s; }
-        .cart-float:hover { transform: scale(1.05); }
+        /* CARRINHO */
+        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold; border: none; z-index: 100; display: none; }
 
         /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-        .checkout-input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 16px; }
+        .modal-box { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; text-align: center; }
+        .checkout-input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; font-size: 16px; font-family: 'Quicksand'; }
         
-        /* ÁREA PIX COM QR CODE */
+        /* ÁREA PIX */
         .pix-box { background: #f0fdfa; border: 2px dashed var(--pix-color); border-radius: 15px; padding: 20px; margin: 15px 0; display: none; }
-        .pix-key { font-weight: bold; color: #0f766e; font-size: 18px; display: block; margin: 10px 0; letter-spacing: 1px; }
-        #qrcode-container { display: flex; justify-content: center; margin: 20px 0; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .btn-copy { background: var(--pix-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; font-family: 'Quicksand', sans-serif; }
-        .btn-copy:active { opacity: 0.7; }
+        #qrcode-container { display: flex; justify-content: center; margin: 15px 0; background: white; padding: 10px; border-radius: 10px; }
+        .btn-copy { background: var(--pix-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
 
-        /* BOTÕES FINAIS (ATUALIZADOS) */
-        .btn-final { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; font-family: 'Quicksand', sans-serif; transition: all 0.2s; }
-        .btn-final:active { transform: scale(0.98); }
-        
-        .btn-pay-now { background: var(--pix-color); color: white; box-shadow: 0 4px 10px rgba(50, 188, 173, 0.3); }
-        .btn-confirm-pay { background: var(--success); color: white; display: none; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
-        
-        /* NOVO ESTILO DO BOTÃO "PAGAR DEPOIS" */
-        .btn-pay-later { 
-            background: #f1f5f9; 
-            color: #64748b; 
-            border: 2px solid #e2e8f0;
-            text-decoration: none; 
-            margin-top: 15px; 
-            font-weight: 700;
-        }
-        .btn-pay-later:hover {
-            background: #e2e8f0;
-            border-color: #cbd5e1;
-            color: #475569;
-        }
+        /* BOTÕES */
+        .btn-final { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; font-family: 'Quicksand'; }
+        .btn-pay-now { background: var(--pix-color); color: white; }
+        .btn-confirm-pay { background: var(--success); color: white; display: none; }
+        .btn-pay-later { background: #f1f5f9; color: #64748b; border: 1px solid #e2e8f0; }
+        .btn-empty { background: none; border: 1px solid #ffcccc; color: var(--primary); padding: 5px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; margin-bottom: 10px; }
 
-        .item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 15px; }
+        .item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 14px; text-align: left; }
     </style>
 </head>
 <body>
@@ -88,66 +68,54 @@
 <header class="header-container">
     <div class="header-banner"></div>
     <div class="header-content">
-        <div class="avatar-vovo">
-            <img src="logo.jpg" alt="Logo Tia Ana" onerror="this.src='https://via.placeholder.com/150?text=Vovo'">
-        </div>
+        <div class="avatar-vovo"><img src="logo.jpg" alt="Logo Tia Ana" onerror="this.src='https://via.placeholder.com/150'"></div>
         <h1 class="welcome-title">O tempero que abraça</h1>
-        <p style="color: #5d4037; font-size: 16px; margin-top: 10px;">Puxe uma cadeira e escolha suas delícias!</p>
+        <div class="welcome-text">
+            <p>Ôh meu filho, puxa uma cadeira e sinta-se em casa!</p>
+            <p>Aqui na <strong>Tia Ana</strong> não tem segredo, tem carinho.</p>
+        </div>
     </div>
 </header>
 
 <div class="container">
-    <h2 class="section-title">Nossas Quitandas</h2>
     <div class="product-grid" id="gridProdutos"></div>
 </div>
 
-<button id="floatingCart" class="cart-float" onclick="abrirModal()">🛒 Ver Pedido (<span id="floatTotal">R$ 0,00</span>)</button>
+<button id="floatingCart" class="cart-float" onclick="abrirModal()">🛒 Ver Pedido (<span id="floatTotal">0,00</span>)</button>
 
 <div id="modalOverlay" class="modal-overlay">
     <div class="modal-box">
-        <h2 style="font-family: 'Caveat'; font-size: 36px; color: var(--primary); margin-top: 0;">Seu Pedido 📝</h2>
+        <button class="btn-empty" onclick="esvaziarCesta()">🗑️ Limpar Cesta</button>
+        <h2 style="font-family: 'Caveat'; font-size: 32px; color: #d35400; margin-top:0;">Sua Cesta 🧺</h2>
         
-        <div id="listaItensModal" style="text-align: left; margin-bottom: 20px;"></div>
+        <div id="listaItensModal"></div>
         
-        <div style="border-top: 2px solid #eee; padding-top: 15px; margin-bottom: 20px;">
-            <span style="font-size: 18px; color: #888;">Total a pagar:</span>
-            <div style="font-size: 32px; font-weight: 800; color: var(--success);" id="modalTotalValor">R$ 0,00</div>
+        <div style="margin: 20px 0; border-top: 1px solid #eee; padding-top: 10px;">
+            <span style="font-size: 26px; font-weight: 800; color: var(--success);" id="modalTotalValor">R$ 0,00</span>
         </div>
         
         <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
 
         <div id="areaPix" class="pix-box">
-            <span style="font-size: 15px; color: #555; font-weight: 600;">💠 Escaneie o QR Code para pagar:</span>
-            
+            <span style="font-size: 14px; color: #555; font-weight: bold;">Escaneie para pagar agora:</span>
             <div id="qrcode-container"></div>
-            
-            <span style="font-size: 14px; color: #555;">Ou use a chave:</span>
-            <span class="pix-key" id="chavePixTexto">35988440656</span>
-            
             <button class="btn-copy" onclick="copiarPix()">Copiar Código Copia e Cola 📋</button>
             <textarea id="pixCopiaCola" style="position: absolute; left: -9999px;"></textarea>
-            
-            <p style="font-size: 12px; color: #666; margin-top: 15px; background: #fff; padding: 10px; border-radius: 8px;">
-                ⚠️ <strong>Importante:</strong> Após realizar o pagamento no seu banco, clique no botão verde abaixo para nos enviar o comprovante.
-            </p>
         </div>
 
         <div id="controlesFinais">
-            <button class="btn-final btn-pay-now" id="btnShowPix" onclick="mostrarOpcaoPix()">1. Pagar agora com Pix (QR Code) 💠</button>
+            <button class="btn-final btn-pay-now" id="btnShowPix" onclick="mostrarOpcaoPix()">1. Pagar com Pix agora 💠</button>
             <button class="btn-final btn-confirm-pay" id="btnConfirmado" onclick="enviarZap(true)">2. JÁ PAGUEI! ENVIAR PEDIDO 📑</button>
-            
-            <button class="btn-final btn-pay-later" onclick="enviarZap(false)">
-                🚚 Pagar na entrega ou depois
-            </button>
+            <button class="btn-final btn-pay-later" onclick="enviarZap(false)">Pagar na entrega / depois 🛵</button>
         </div>
         
-        <button onclick="fecharModal()" style="margin-top: 20px; background: none; border: none; color: #bbb; cursor: pointer; font-size: 14px;">Voltar e mudar itens</button>
+        <button onclick="fecharModal()" style="margin-top: 15px; background: none; border: none; color: #999; cursor: pointer;">Voltar</button>
     </div>
 </div>
 
 <script>
     const WHATSAPP = "5535988440656"; 
-    const CHAVE_PIX = "35988440656"; // Sua chave fixa
+    const CHAVE_PIX = "35988440656"; 
 
     const PRODUTOS = [
         { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg" },
@@ -156,30 +124,23 @@
     ];
 
     let carrinho = [];
-    let qrCodeGenerator = null; // Variável para guardar o gerador de QR Code
 
     function renderizarProdutos() {
         const grid = document.getElementById('gridProdutos');
         PRODUTOS.forEach((prod, index) => {
             grid.innerHTML += `
                 <div class="product-card">
-                    <img src="${prod.imagem}" class="product-img" alt="${prod.nome}" onerror="this.src='https://via.placeholder.com/200?text=Salgado'">
+                    <img src="${prod.imagem}" class="product-img" onerror="this.src='https://via.placeholder.com/200'">
                     <div class="product-info">
                         <h3 class="product-title">${prod.nome}</h3>
-                        <span class="product-price">R$ ${prod.preco.toFixed(2).replace('.', ',')}</span>
-                        <div style="margin-top:5px;">
-                            <label style="font-size:11px; color:#999; font-weight:bold;">TIPO:</label>
-                            <select id="tipo-${index}"><option>Frita na hora 🔥</option><option>Congelada ❄️</option></select>
-                        </div>
-                        <div style="margin-top:5px;">
-                            <label style="font-size:11px; color:#999; font-weight:bold;">QUANTIDADE:</label>
-                            <select id="qtd-${index}">
-                                <option value="25">25 unidades</option>
-                                <option value="50">50 unidades</option>
-                                <option value="100">100 unidades</option>
-                            </select>
-                        </div>
-                        <button class="btn-add" onclick="adicionar(${index})">Colocar na Cesta</button>
+                        <span class="product-price">R$ ${prod.preco.toFixed(2).replace('.',',')}</span>
+                        <select id="tipo-${index}"><option>Frita na hora 🔥</option><option>Congelada ❄️</option></select>
+                        <select id="qtd-${index}">
+                            <option value="25">25 unidades</option>
+                            <option value="50">50 unidades</option>
+                            <option value="100">100 unidades</option>
+                        </select>
+                        <button class="btn-add" onclick="adicionar(${index})">Adicionar</button>
                     </div>
                 </div>`;
         });
@@ -189,90 +150,67 @@
         const p = PRODUTOS[index];
         const qtd = parseInt(document.getElementById(`qtd-${index}`).value);
         const tipo = document.getElementById(`tipo-${index}`).value;
-        
-        const existente = carrinho.find(item => item.nome === p.nome && item.tipo === tipo);
-        if(existente) { existente.qtd += qtd; } else { carrinho.push({ nome: p.nome, preco: p.preco, qtd, tipo }); }
-        
+        const existente = carrinho.find(i => i.nome === p.nome && i.tipo === tipo);
+        if(existente) existente.qtd += qtd; else carrinho.push({ nome: p.nome, preco: p.preco, qtd, tipo });
         atualizarCarrinho();
-        const btn = event.target; const originalText = btn.innerText; btn.innerText = "✅ Adicionado!"; setTimeout(() => btn.innerText = originalText, 800);
+    }
+
+    function esvaziarCesta() {
+        if(confirm("Deseja limpar toda a cesta?")) {
+            carrinho = [];
+            atualizarCarrinho();
+            fecharModal();
+        }
     }
 
     function atualizarCarrinho() {
         const total = carrinho.reduce((acc, i) => acc + (i.qtd * i.preco), 0);
-        const totalFormatado = total.toFixed(2).replace('.', ',');
-        
-        document.getElementById('floatTotal').innerText = `R$ ${totalFormatado}`;
-        document.getElementById('modalTotalValor').innerText = `R$ ${totalFormatado}`;
+        const formatado = total.toFixed(2).replace('.', ',');
+        document.getElementById('floatTotal').innerText = `R$ ${formatado}`;
+        document.getElementById('modalTotalValor').innerText = `R$ ${formatado}`;
         document.getElementById('floatingCart').style.display = carrinho.length > 0 ? 'block' : 'none';
 
         const lista = document.getElementById('listaItensModal');
         lista.innerHTML = carrinho.map(i => `
             <div class="item-row">
                 <span><strong>${i.qtd}x</strong> ${i.nome} <small>(${i.tipo})</small></span>
-                <span>R$ ${(i.qtd * i.preco).toFixed(2).replace('.', ',')}</span>
-            </div>
-        `).join('');
-        
-        // === MÁGICA DO QR CODE ===
-        const payload = `00020126360014BR.GOV.BCB.PIX0114${CHAVE_PIX}520400005303986540${total.toFixed(2)}5802BR5915TIA_ANA_SALGADO6007GUAXUPE62070503***6304`;
+                <span>R$ ${(i.qtd * i.preco).toFixed(2).replace('.',',')}</span>
+            </div>`).join('');
+
+        // Gerar Payload do Pix
+        const valorPix = total.toFixed(2);
+        const payload = `00020126360014BR.GOV.BCB.PIX0114${CHAVE_PIX}520400005303986540${valorPix}5802BR5915TIA_ANA_SALGADO6007GUAXUPE62070503***6304`;
         document.getElementById('pixCopiaCola').value = payload;
 
-        // Limpa o QR Code anterior
+        // Atualizar QR Code
         const qrContainer = document.getElementById('qrcode-container');
         qrContainer.innerHTML = '';
-
-        // Gera o novo QR Code se houver valor
-        if (total > 0) {
-            qrCodeGenerator = new QRCode(qrContainer, {
-                text: payload,
-                width: 180,
-                height: 180,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
-            });
+        if(total > 0) {
+            new QRCode(qrContainer, { text: payload, width: 160, height: 160 });
         }
     }
 
     function mostrarOpcaoPix() {
-        const nome = document.getElementById('nomeCliente').value.trim();
-        if(!nome) return alert("Ôh meu filho, digite seu nome primeiro!");
-        
+        if(!document.getElementById('nomeCliente').value) return alert("Diga seu nome primeiro!");
         document.getElementById('areaPix').style.display = 'block';
         document.getElementById('btnShowPix').style.display = 'none';
         document.getElementById('btnConfirmado').style.display = 'block';
-        // Rola a tela para o QR Code
-        document.getElementById('areaPix').scrollIntoView({behavior: 'smooth'});
     }
 
     function copiarPix() {
         const campo = document.getElementById('pixCopiaCola');
-        campo.select(); campo.setSelectionRange(0, 99999); document.execCommand('copy');
-        alert("Código Pix copiado! Abra seu banco e use a opção 'Pix Copia e Cola'.");
+        campo.select(); document.execCommand('copy');
+        alert("Código Pix copiado!");
     }
 
     function abrirModal() { document.getElementById('modalOverlay').style.display = 'flex'; }
-    function fecharModal() { 
-        document.getElementById('modalOverlay').style.display = 'none'; 
-        document.getElementById('areaPix').style.display = 'none';
-        document.getElementById('btnShowPix').style.display = 'block';
-        document.getElementById('btnConfirmado').style.display = 'none';
-    }
+    function fecharModal() { document.getElementById('modalOverlay').style.display = 'none'; }
 
     function enviarZap(jaPagou) {
-        const nome = document.getElementById('nomeCliente').value.trim();
-        if(!nome) return alert("Diga-me seu nome, por favor!");
-
-        let status = jaPagou ? "✅ *PAGAMENTO REALIZADO VIA PIX*" : "⏳ *AGUARDANDO PAGAMENTO*";
-        let obs = jaPagou ? "_Estou enviando o comprovante logo abaixo desta mensagem!_" : "_Vou realizar o pagamento na entrega ou via Pix em seguida._";
-
-        let msg = `*PEDIDO TIA ANA* 📝%0A%0A`;
-        msg += `👤 *Cliente:* ${nome}%0A`;
-        msg += `💰 *Total:* ${document.getElementById('modalTotalValor').innerText}%0A`;
-        msg += `🚩 *Status:* ${status}%0A%0A`;
-        msg += `*ITENS:*%0A` + carrinho.map(i => `- ${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
-        msg += `%0A%0A${obs}`;
-
+        const nome = document.getElementById('nomeCliente').value;
+        if(!nome) return alert("Escreva seu nome!");
+        let status = jaPagou ? "✅ *PAGAMENTO REALIZADO*" : "⏳ *AGUARDANDO PAGAMENTO*";
+        let msg = `*PEDIDO TIA ANA* 📝%0A👤 *Cliente:* ${nome}%0A💰 *Total:* ${document.getElementById('modalTotalValor').innerText}%0A🚩 *Status:* ${status}%0A%0A*ITENS:*%0A` + carrinho.map(i => `- ${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
         window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
     }
 
