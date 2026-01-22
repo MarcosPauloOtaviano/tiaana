@@ -83,7 +83,12 @@
             box-shadow: 0 4px 10px rgba(0, 192, 77, 0.3); font-size: 16px; 
         }
         .pay-option-pagbank:hover { filter: brightness(0.95); }
-        .btn-finalizar { width: 100%; background: var(--success); color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .btn-finalizar { width: 100%; background: #555; color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .btn-pagou { background: var(--success); }
+        
+        /* AVISO DE PAGAMENTO */
+        .warning-box { background-color: #fff3cd; color: #856404; padding: 15px; border-radius: 10px; border: 1px solid #ffeeba; text-align: center; font-size: 14px; margin-bottom: 15px; display: none; font-weight: bold; }
+
         .hidden-section { display: none !important; }
         .success-msg { background: #d4edda; color: #155724; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #c3e6cb; }
     </style>
@@ -130,37 +135,30 @@
                 <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; text-align:left;">Como pretende pagar?</div>
                 <div class="payment-options">
                     <div class="pay-option" id="optPagBank" onclick="selecionarIntencaoPagamento('pagbank')">
-                        💳 Pagar agora com Pix (QR Code)
+                        💳 Pagar AGORA com Pix (QR Code)
                     </div>
                     <div class="pay-option selected" id="optEntrega" onclick="selecionarIntencaoPagamento('entrega')">
-                        💵 Pagar na Entrega (Dinheiro/Máquina)
+                        💵 Pagar NA ENTREGA
                     </div>
                 </div>
                 
                 <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
-                <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">1. Enviar Pedido no Zap 📲</button>
-            </div>
 
-            <div id="step-pagamento" class="hidden-section">
-                <div class="success-msg">✅ Pedido Enviado no WhatsApp!</div>
-                <div id="msg-entrega" class="hidden-section" style="text-align:center; color:#555; margin-bottom:20px;">
-                    Obrigado! Aguarde a confirmação da Tia Ana no Zap.
-                </div>
-                <div id="area-pagbank" class="hidden-section">
-                    <div id="intro-pagamento" style="text-align:center; margin-bottom:10px; color:#555;">Agora finalize seu pagamento seguro:</div>
-                    <div class="pay-option-pagbank" id="btnPagarPagBank" onclick="gerarPixAutomatico()">
-                        💠 Gerar QR Code Pix
-                    </div>
-                    <div id="area-qrcode-gerado" style="display:none; text-align:center; background:#f0fff4; padding:15px; border-radius:10px; border:1px solid #bdfecb; margin-top:10px;">
-                        <span style="font-weight:bold; color:#00C04D; font-size:14px;">Escaneie para pagar o valor exato:</span>
+                <div id="area-pix-completa" style="display:none;">
+                    <div id="area-qrcode-gerado" style="text-align:center; background:#f0fff4; padding:15px; border-radius:10px; border:1px solid #bdfecb; margin:10px 0;">
+                        <span style="font-weight:bold; color:#00C04D; font-size:14px;">Escaneie para pagar:</span>
                         <div id="img-qr-container" style="margin:10px auto; width:100%; display:flex; justify-content:center;"></div>
                         <textarea id="cola-pix-input" style="width:1px; height:1px; opacity:0; position:absolute;"></textarea>
-                        <button onclick="copiarCodigoPix()" style="background:#00C04D; color:white; border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold; font-size:14px; box-shadow:0 4px 10px rgba(0,192,77,0.3);">
+                        <button onclick="copiarCodigoPix()" style="background:#00C04D; color:white; border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold; font-size:14px; width:100%;">
                             📑 Copiar Código Pix
                         </button>
                     </div>
+                    <div class="warning-box">
+                        ⚠️ ATENÇÃO: Realize o pagamento pelo QR Code ACIMA e depois clique no botão abaixo para enviar o comprovante.
+                    </div>
                 </div>
-                <div style="margin-top:20px; text-align:center;"><a href="#" onclick="fecharModal()" style="color:#999; text-decoration:none; font-size:14px;">Fechar e continuar comprando</a></div>
+                
+                <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">Enviar Pedido 📲</button>
             </div>
         </div>
     </div>
@@ -244,25 +242,43 @@
         document.getElementById('optEntrega').classList.toggle('selected', metodo === 'entrega'); 
         document.getElementById('optPagBank').classList.toggle('selected', metodo === 'pagbank'); 
         
+        const areaPix = document.getElementById('area-pix-completa');
+        const btnZap = document.getElementById('btnZapAction');
+
         if(metodo === 'pagbank') { 
+            // ESTILO PIX
             document.getElementById('optPagBank').style.background="#f0fff4"; 
             document.getElementById('optPagBank').style.border="2px solid #00C04D"; 
             document.getElementById('optEntrega').style.background=""; 
             document.getElementById('optEntrega').style.border=""; 
+            
+            // MOSTRA O QR CODE E GERA NA HORA
+            areaPix.style.display = "block";
+            gerarPixAutomatico(); 
+            
+            // MUDA O BOTÃO PARA "JÁ PAGUEI"
+            btnZap.innerText = "JÁ PAGUEI! Enviar Pedido ✅";
+            btnZap.classList.add("btn-pagou");
         } else { 
+            // ESTILO ENTREGA
             document.getElementById('optPagBank').style.background=""; 
             document.getElementById('optPagBank').style.border=""; 
             document.getElementById('optEntrega').style.background="#eee"; 
             document.getElementById('optEntrega').style.border="2px solid #555"; 
+            
+            // ESCONDE O QR CODE
+            areaPix.style.display = "none";
+            
+            // VOLTA O BOTÃO AO NORMAL
+            btnZap.innerText = "Enviar Pedido (Pagar na Entrega) 📲";
+            btnZap.classList.remove("btn-pagou");
         } 
     }
     
     function abrirModal() { 
         document.getElementById('modalOverlay').classList.add('active'); 
-        document.getElementById('step-dados').classList.remove('hidden-section'); 
-        document.getElementById('step-pagamento').classList.add('hidden-section'); 
-        document.getElementById('btnPagarPagBank').style.display = "flex";
-        document.getElementById('area-qrcode-gerado').style.display = "none";
+        // Garante que comece limpo ou com a seleção padrão
+        selecionarIntencaoPagamento(intencaoPagamento);
     }
     
     function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
@@ -272,84 +288,71 @@
         if(!nome) return alert("Digite seu nome!");
         
         let textoEntrega = modoEntrega === 'schedule' ? `📅 ${document.getElementById('inputData').value} às ${document.getElementById('inputHora').value}` : "🛵 ENTREGA IMEDIATA";
-        let msg = `*PEDIDO TIA ANA*%0A👤 ${nome}%0A💰 Total: ${document.getElementById('modalTotalValor').innerText}%0A${textoEntrega}%0A%0A*ITENS:*%0A` + carrinho.map(i => `${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
         
-        msg += `%0A%0APagamento: ${intencaoPagamento === 'pagbank' ? '💳 PIX (QR Code)' : '💵 NA ENTREGA'}`;
+        // --- DEFININDO O STATUS CONFORME O PEDIDO ---
+        let statusIcon = intencaoPagamento === 'pagbank' ? '🟢' : '🔴';
+        let statusText = intencaoPagamento === 'pagbank' ? 'PAGAMENTO REALIZADO' : 'AGUARDANDO PAGAMENTO';
+        let footerText = intencaoPagamento === 'pagbank' ? 'Estou enviando o comprovante abaixo.' : 'Vou pagar na entrega ou via Pix depois.';
+
+        // --- MONTAGEM DA MENSAGEM ---
+        let msg = `*PEDIDO TIA ANA* 📝%0A%0A`;
+        msg += `👤 *Cliente:* ${nome}%0A`;
+        msg += `💰 *Total:* ${document.getElementById('modalTotalValor').innerText}%0A`;
+        msg += `${statusIcon} *Status:*%0A*${statusText}*%0A%0A`;
+        msg += `*ITENS:*%0A` + carrinho.map(i => `${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
+        msg += `%0A%0A_${footerText}_`;
         
         window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
-        mostrarTelaPagamento();
-    }
-
-    function mostrarTelaPagamento() {
-        document.getElementById('step-dados').classList.add('hidden-section'); 
-        document.getElementById('step-pagamento').classList.remove('hidden-section');
-        document.getElementById('area-pagbank').classList.toggle('hidden-section', intencaoPagamento !== 'pagbank');
-        document.getElementById('msg-entrega').classList.toggle('hidden-section', intencaoPagamento === 'pagbank');
-        
-        if(intencaoPagamento === 'pagbank') {
-            gerarPixAutomatico();
-        }
+        fecharModal();
     }
 
     // --- FUNÇÃO CORRIGIDA DE GERAÇÃO DO PAYLOAD PIX (EVITA ERRO DE TAMANHO) ---
     function gerarPixAutomatico() {
-        const btn = document.getElementById('btnPagarPagBank');
-        const boxQr = document.getElementById('area-qrcode-gerado');
         const imgContainer = document.getElementById('img-qr-container');
         const inputCopia = document.getElementById('cola-pix-input');
         
-        btn.innerHTML = "Gerando QR Code...";
-        
         const valor = valorFinalCalculado.toFixed(2);
         
-        // GERA O PAYLOAD USANDO A NOVA FUNÇÃO SEGURA
+        // GERA O PAYLOAD
         const payload = PixPayload(CHAVE_PIX_TITULAR, NOME_TITULAR, CIDADE_TITULAR, valor, "***");
         
-        setTimeout(() => {
-            btn.style.display = "none";
-            boxQr.style.display = "block";
-            imgContainer.innerHTML = "";
-            
-            new QRCode(imgContainer, {
-                text: payload,
-                width: 200,
-                height: 200,
-                colorDark : "#000000",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.M
-            });
-            inputCopia.value = payload;
-        }, 500);
+        imgContainer.innerHTML = "";
+        
+        new QRCode(imgContainer, {
+            text: payload,
+            width: 200,
+            height: 200,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.M
+        });
+        inputCopia.value = payload;
     }
 
-    // --- NOVA LÓGICA DE MONTAGEM DO PIX (CALCULA O TAMANHO SOZINHO) ---
+    // --- LÓGICA DE MONTAGEM DO PIX (CALCULA O TAMANHO SOZINHO) ---
     function PixPayload(chave, nome, cidade, valor, txid) {
         const nomeTratado = nome.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         const cidadeTratada = cidade.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         
-        // Monta o campo 26 (Merchant Account Info)
         const gui = "0014BR.GOV.BCB.PIX";
         const key = "01" + (chave.length < 10 ? "0" + chave.length : chave.length) + chave;
         const merchantAccount = gui + key;
         
-        // Função auxiliar para formatar campos ID + TAMANHO + VALOR
         const formatField = (id, value) => {
             const len = value.length < 10 ? "0" + value.length : value.length;
             return id + len + value;
         };
 
-        // Montagem sequencial
-        let payload = formatField("00", "01"); // Payload Format Indicator
+        let payload = formatField("00", "01"); 
         payload += formatField("26", merchantAccount);
-        payload += formatField("52", "0000"); // MCC
-        payload += formatField("53", "986"); // Moeda (BRL)
-        payload += formatField("54", valor); // Valor
-        payload += formatField("58", "BR"); // País
-        payload += formatField("59", nomeTratado); // Nome
-        payload += formatField("60", cidadeTratada); // Cidade
-        payload += formatField("62", formatField("05", txid)); // TxID
+        payload += formatField("52", "0000"); 
+        payload += formatField("53", "986"); 
+        payload += formatField("54", valor); 
+        payload += formatField("58", "BR"); 
+        payload += formatField("59", nomeTratado); 
+        payload += formatField("60", cidadeTratada); 
+        payload += formatField("62", formatField("05", txid)); 
 
-        // Adiciona o CRC16
         payload += "6304";
         payload += calcularCRC16(payload);
 
