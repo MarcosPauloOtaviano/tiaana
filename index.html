@@ -19,40 +19,48 @@
         
         /* HEADER */
         .header-container { background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; overflow: hidden; margin-bottom: 30px; position: relative; }
-        .header-banner { width: 100%; height: 200px; background-image: url('fundo.jpg'); background-size: cover; background-position: center; }
+        .header-banner { width: 100%; height: 200px; background-image: url('fundo.jpg'); background-size: cover; background-position: center; background-color: #ddd; }
         .header-content { padding: 0 20px 40px 20px; text-align: center; position: relative; background: white; margin-top: -20px; border-top-left-radius: 30px; border-top-right-radius: 30px; }
         .avatar-vovo { width: 110px; height: 110px; background-color: white; border-radius: 50%; margin: -60px auto 15px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .avatar-vovo img { width: 100%; height: 100%; object-fit: cover; }
-        .welcome-title { font-family: 'Caveat', cursive; font-size: 42px; color: #d35400; margin: 0; }
+        .welcome-title { font-family: 'Caveat', cursive; font-size: 42px; color: #d35400; margin: 0; line-height: 1.1; }
 
         /* PRODUTOS */
         .container { max-width: 800px; margin: 0 auto; padding: 0 15px; }
+        .section-title { text-align: center; font-family: 'Caveat', cursive; color: var(--primary); font-size: 32px; margin: 20px 0; }
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
-        .product-img { width: 100%; height: 150px; object-fit: cover; }
-        .product-info { padding: 15px; flex-grow: 1; }
-        .product-title { font-weight: 700; font-size: 20px; color: #d35400; font-family: 'Caveat', cursive; }
-        select { width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #eee; margin: 5px 0; }
-        .btn-add { width: 100%; background: #d35400; color: white; border: none; padding: 10px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-img { width: 100%; height: 150px; object-fit: cover; background-color: #f9f9f9; }
+        .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 10px; }
+        .product-title { font-weight: 700; font-size: 22px; margin: 0; color: #d35400; font-family: 'Caveat', cursive; }
+        .product-price { font-size: 18px; font-weight: bold; color: var(--primary); background: #fff0f0; padding: 5px 10px; border-radius: 10px; align-self: flex-start; }
+        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9; font-family: 'Quicksand', sans-serif; font-size: 14px; }
+        .btn-add { background: #d35400; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; transition: background 0.2s; }
+        .btn-add:hover { background: #e67e22; }
 
         /* CARRINHO FLUTUANTE */
-        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold; display: none; border: none; z-index: 100; }
+        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold; border: none; z-index: 100; display: none; font-family: 'Quicksand', sans-serif; font-size: 16px; }
 
         /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal-box { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; text-align: center; }
-        .checkout-input { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; }
+        .modal-box { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        .checkout-input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 16px; }
         
-        /* ÁREA PIX */
-        .pix-box { background: #f0fdfa; border: 2px dashed var(--pix-color); border-radius: 15px; padding: 15px; margin: 15px 0; display: none; }
-        .pix-key { font-weight: bold; color: #0f766e; font-size: 16px; display: block; margin: 10px 0; }
-        .btn-copy { background: var(--pix-color); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+        /* PIX */
+        .pix-box { background: #f0fdfa; border: 2px dashed var(--pix-color); border-radius: 15px; padding: 20px; margin: 15px 0; display: none; }
+        .pix-key { font-weight: bold; color: #0f766e; font-size: 18px; display: block; margin: 10px 0; letter-spacing: 1px; }
+        .btn-copy { background: var(--pix-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        .btn-copy:active { opacity: 0.7; }
 
         /* BOTÕES FINAIS */
-        .btn-final { width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        .btn-pay-now { background: var(--pix-color); color: white; }
-        .btn-confirm-pay { background: var(--success); color: white; display: none; }
-        .btn-pay-later { background: none; color: #888; text-decoration: underline; font-size: 14px; }
+        .btn-final { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; font-family: 'Quicksand', sans-serif; transition: transform 0.1s; }
+        .btn-final:active { transform: scale(0.98); }
+        .btn-pay-now { background: var(--pix-color); color: white; box-shadow: 0 4px 10px rgba(50, 188, 173, 0.3); }
+        .btn-confirm-pay { background: var(--success); color: white; display: none; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .btn-pay-later { background: none; color: #888; text-decoration: underline; font-size: 14px; margin-top: 15px; }
+
+        .item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -60,46 +68,55 @@
 <header class="header-container">
     <div class="header-banner"></div>
     <div class="header-content">
-        <div class="avatar-vovo"><img src="logo.jpg" alt="Tia Ana"></div>
-        <h1 class="welcome-title">Salgados da Tia Ana</h1>
-        <p>Escolha suas delícias abaixo, meu filho!</p>
+        <div class="avatar-vovo">
+            <img src="logo.jpg" alt="Logo Tia Ana" onerror="this.src='https://via.placeholder.com/150?text=Vovo'">
+        </div>
+        <h1 class="welcome-title">O tempero que abraça</h1>
+        <p style="color: #5d4037; font-size: 16px; margin-top: 10px;">Puxe uma cadeira e escolha suas delícias!</p>
     </div>
 </header>
 
 <div class="container">
+    <h2 class="section-title">Nossas Quitandas</h2>
     <div class="product-grid" id="gridProdutos"></div>
 </div>
 
-<button id="floatingCart" class="cart-float" onclick="abrirModal()">🛒 Ver Pedido (R$ <span id="floatTotal">0,00</span>)</button>
+<button id="floatingCart" class="cart-float" onclick="abrirModal()">🛒 Ver Pedido (<span id="floatTotal">R$ 0,00</span>)</button>
 
 <div id="modalOverlay" class="modal-overlay">
     <div class="modal-box">
-        <h2 style="font-family: 'Caveat'; font-size: 32px; color: var(--primary);">Seu Pedido 📝</h2>
-        <div id="listaItensModal" style="text-align: left; margin-bottom: 15px;"></div>
-        <h3 style="font-size: 24px;">Total: <span id="modalTotalValor">R$ 0,00</span></h3>
+        <h2 style="font-family: 'Caveat'; font-size: 36px; color: var(--primary); margin-top: 0;">Seu Pedido 📝</h2>
         
-        <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome...">
+        <div id="listaItensModal" style="text-align: left; margin-bottom: 20px;"></div>
+        
+        <div style="border-top: 2px solid #eee; padding-top: 15px; margin-bottom: 20px;">
+            <span style="font-size: 18px; color: #888;">Total a pagar:</span>
+            <div style="font-size: 32px; font-weight: 800; color: var(--success);" id="modalTotalValor">R$ 0,00</div>
+        </div>
+        
+        <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
 
         <div id="areaPix" class="pix-box">
-            <span style="font-size: 14px; color: #555;">Pague agora para agilizar seu pedido:</span>
-            <span class="pix-key" id="chavePixTexto">SUA_CHAVE_AQUI</span>
-            <button class="btn-copy" onclick="copiarPix()">Copiar Código Pix 📋</button>
-            <textarea id="pixCopiaCola" style="position: absolute; left: -9999px;">00020126360014BR.GOV.BCB.PIX0114SUA_CHAVE_AQUI5204000053039865401.005802BR5915TIA_ANA_SALGADO6007GUAXUPE62070503***6304</textarea>
+            <span style="font-size: 15px; color: #555; font-weight: 600;">💠 Chave Pix para Pagamento:</span>
+            <span class="pix-key" id="chavePixTexto">35988440656</span>
+            <button class="btn-copy" onclick="copiarPix()">Copiar Código Copia e Cola 📋</button>
+            <textarea id="pixCopiaCola" style="position: absolute; left: -9999px;"></textarea>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">Após pagar, clique no botão verde abaixo para nos enviar o comprovante.</p>
         </div>
 
         <div id="controlesFinais">
             <button class="btn-final btn-pay-now" id="btnShowPix" onclick="mostrarOpcaoPix()">1. Pagar agora com Pix 💠</button>
-            <button class="btn-final btn-confirm-pay" id="btnConfirmado" onclick="enviarZap(true)">2. Já paguei! Enviar Pedido + Comprovante 📑</button>
-            <button class="btn-final btn-pay-later" onclick="enviarZap(false)">Vou pagar na entrega / depois</button>
+            <button class="btn-final btn-confirm-pay" id="btnConfirmado" onclick="enviarZap(true)">2. JÁ PAGUEI! ENVIAR PEDIDO 📑</button>
+            <button class="btn-final btn-pay-later" onclick="enviarZap(false)">Pagar na entrega ou depois</button>
         </div>
         
-        <button onclick="fecharModal()" style="margin-top: 20px; background: none; border: none; color: #999; cursor: pointer;">Cancelar</button>
+        <button onclick="fecharModal()" style="margin-top: 20px; background: none; border: none; color: #bbb; cursor: pointer; font-size: 14px;">Voltar e mudar itens</button>
     </div>
 </div>
 
 <script>
     const WHATSAPP = "5535988440656"; 
-    const CHAVE_PIX = "35988440656"; // COLOQUE SUA CHAVE AQUI
+    const CHAVE_PIX = "35988440656"; // Chave configurada conforme solicitado
 
     const PRODUTOS = [
         { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg" },
@@ -114,17 +131,23 @@
         PRODUTOS.forEach((prod, index) => {
             grid.innerHTML += `
                 <div class="product-card">
-                    <img src="${prod.imagem}" class="product-img" onerror="this.src='https://via.placeholder.com/200'">
+                    <img src="${prod.imagem}" class="product-img" alt="${prod.nome}" onerror="this.src='https://via.placeholder.com/200?text=Salgado'">
                     <div class="product-info">
                         <h3 class="product-title">${prod.nome}</h3>
-                        <p style="color:var(--primary); font-weight:bold;">R$ ${prod.preco.toFixed(2)}</p>
-                        <select id="tipo-${index}"><option>Frita na hora</option><option>Congelada</option></select>
-                        <select id="qtd-${index}">
-                            <option value="25">25 unidades</option>
-                            <option value="50">50 unidades</option>
-                            <option value="100">100 unidades</option>
-                        </select>
-                        <button class="btn-add" onclick="adicionar(${index})">Adicionar</button>
+                        <span class="product-price">R$ ${prod.preco.toFixed(2).replace('.', ',')}</span>
+                        <div style="margin-top:5px;">
+                            <label style="font-size:11px; color:#999; font-weight:bold;">TIPO:</label>
+                            <select id="tipo-${index}"><option>Frita na hora 🔥</option><option>Congelada ❄️</option></select>
+                        </div>
+                        <div style="margin-top:5px;">
+                            <label style="font-size:11px; color:#999; font-weight:bold;">QUANTIDADE:</label>
+                            <select id="qtd-${index}">
+                                <option value="25">25 unidades</option>
+                                <option value="50">50 unidades</option>
+                                <option value="100">100 unidades</option>
+                            </select>
+                        </div>
+                        <button class="btn-add" onclick="adicionar(${index})">Colocar na Cesta</button>
                     </div>
                 </div>`;
         });
@@ -134,46 +157,77 @@
         const p = PRODUTOS[index];
         const qtd = parseInt(document.getElementById(`qtd-${index}`).value);
         const tipo = document.getElementById(`tipo-${index}`).value;
-        carrinho.push({ nome: p.nome, preco: p.preco, qtd, tipo });
+        
+        // Verifica se já existe o mesmo item com o mesmo tipo no carrinho
+        const existente = carrinho.find(item => item.nome === p.nome && item.tipo === tipo);
+        if(existente) {
+            existente.qtd += qtd;
+        } else {
+            carrinho.push({ nome: p.nome, preco: p.preco, qtd, tipo });
+        }
+        
         atualizarCarrinho();
+        
+        // Pequeno feedback no botão
+        const btn = event.target;
+        const originalText = btn.innerText;
+        btn.innerText = "✅ Adicionado!";
+        setTimeout(() => btn.innerText = originalText, 800);
     }
 
     function atualizarCarrinho() {
         const total = carrinho.reduce((acc, i) => acc + (i.qtd * i.preco), 0);
-        document.getElementById('floatTotal').innerText = total.toFixed(2).replace('.', ',');
-        document.getElementById('modalTotalValor').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+        const totalFormatado = total.toFixed(2).replace('.', ',');
+        
+        document.getElementById('floatTotal').innerText = `R$ ${totalFormatado}`;
+        document.getElementById('modalTotalValor').innerText = `R$ ${totalFormatado}`;
         document.getElementById('floatingCart').style.display = carrinho.length > 0 ? 'block' : 'none';
 
         const lista = document.getElementById('listaItensModal');
-        lista.innerHTML = carrinho.map(i => `<div>• ${i.qtd}x ${i.nome} (${i.tipo})</div>`).join('');
+        lista.innerHTML = carrinho.map(i => `
+            <div class="item-row">
+                <span><strong>${i.qtd}x</strong> ${i.nome} <small>(${i.tipo})</small></span>
+                <span>R$ ${(i.qtd * i.preco).toFixed(2).replace('.', ',')}</span>
+            </div>
+        `).join('');
         
-        // Atualiza o valor no código pix
-        document.getElementById('pixCopiaCola').value = `00020126360014BR.GOV.BCB.PIX0114${CHAVE_PIX}520400005303986540${total.toFixed(2)}5802BR5915TIA_ANA_SALGADO6007GUAXUPE62070503***6304`;
+        // Gera o Payload simplificado do Pix Copia e Cola
+        const payload = `00020126360014BR.GOV.BCB.PIX0114${CHAVE_PIX}520400005303986540${total.toFixed(2)}5802BR5915TIA_ANA_SALGADO6007GUAXUPE62070503***6304`;
+        document.getElementById('pixCopiaCola').value = payload;
     }
 
     function mostrarOpcaoPix() {
+        const nome = document.getElementById('nomeCliente').value.trim();
+        if(!nome) return alert("Ôh meu filho, digite seu nome primeiro!");
+        
         document.getElementById('areaPix').style.display = 'block';
         document.getElementById('btnShowPix').style.display = 'none';
         document.getElementById('btnConfirmado').style.display = 'block';
-        document.getElementById('chavePixTexto').innerText = CHAVE_PIX;
     }
 
     function copiarPix() {
         const campo = document.getElementById('pixCopiaCola');
         campo.select();
+        campo.setSelectionRange(0, 99999); // Para mobile
         document.execCommand('copy');
-        alert("Código Pix copiado! Cole no seu banco.");
+        alert("Código Pix copiado! Agora abra o aplicativo do seu banco e use a opção 'Pix Copia e Cola'.");
     }
 
     function abrirModal() { document.getElementById('modalOverlay').style.display = 'flex'; }
-    function fecharModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+    function fecharModal() { 
+        document.getElementById('modalOverlay').style.display = 'none'; 
+        // Reseta os botões ao fechar
+        document.getElementById('areaPix').style.display = 'none';
+        document.getElementById('btnShowPix').style.display = 'block';
+        document.getElementById('btnConfirmado').style.display = 'none';
+    }
 
     function enviarZap(jaPagou) {
-        const nome = document.getElementById('nomeCliente').value;
+        const nome = document.getElementById('nomeCliente').value.trim();
         if(!nome) return alert("Diga-me seu nome, por favor!");
 
         let status = jaPagou ? "✅ *PAGAMENTO REALIZADO VIA PIX*" : "⏳ *AGUARDANDO PAGAMENTO*";
-        let obs = jaPagou ? "_Estou enviando o comprovante abaixo!_" : "_Vou pagar na entrega ou via Pix agora._";
+        let obs = jaPagou ? "_Estou enviando o comprovante logo abaixo desta mensagem!_" : "_Vou realizar o pagamento na entrega ou via Pix em seguida._";
 
         let msg = `*PEDIDO TIA ANA* 📝%0A%0A`;
         msg += `👤 *Cliente:* ${nome}%0A`;
@@ -185,6 +239,7 @@
         window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
     }
 
+    // Inicialização
     renderizarProdutos();
 </script>
 </body>
