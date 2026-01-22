@@ -21,9 +21,7 @@
         
         /* HEADER */
         .header-container { background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; overflow: hidden; margin-bottom: 30px; position: relative; }
-        
         .header-banner { width: 100%; height: 200px; background-color: #eee; background-image: url('fundo.jpg'); background-size: cover; background-position: center; }
-        
         .header-content { padding: 0 20px 40px 20px; text-align: center; position: relative; background: white; margin-top: -20px; border-top-left-radius: 30px; border-top-right-radius: 30px; }
         
         .avatar-vovo { width: 110px; height: 110px; background-color: white; border-radius: 50%; margin: -60px auto 15px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; position: relative; z-index: 10; overflow: hidden; }
@@ -77,7 +75,6 @@
         .pay-option { border: 2px solid #eee; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; font-weight: bold; color: #888; transition: 0.2s; display: block; }
         .pay-option.selected { border-color: #555; background: #eee; color: #333; }
         
-        /* ESTILO PAGBANK - MUDADO PARA VERDE */
         .pay-option-pagbank { 
             border: none; padding: 16px; text-align: center; border-radius: 12px; 
             cursor: pointer; font-weight: bold; color: white; 
@@ -86,11 +83,9 @@
             box-shadow: 0 4px 10px rgba(0, 192, 77, 0.3); font-size: 16px; 
         }
         .pay-option-pagbank:hover { filter: brightness(0.95); }
-
         .btn-finalizar { width: 100%; background: var(--success); color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
         .hidden-section { display: none !important; }
         .success-msg { background: #d4edda; color: #155724; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #c3e6cb; }
-        .info-box { background-color: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 12px; font-size: 14px; margin-bottom: 15px; text-align: center; border: 1px solid #bbdefb; }
     </style>
 </head>
 <body>
@@ -143,7 +138,6 @@
                 </div>
                 
                 <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
-                
                 <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">1. Enviar Pedido no Zap 📲</button>
             </div>
 
@@ -174,13 +168,15 @@
 
 <script>
     const WHATSAPP = "5535988440656"; 
-    const CHAVE_PIX_TITULAR = "35988440656"; // SUA CHAVE PIX
-    const NOME_TITULAR = "TIA ANA SALGADOS"; // NOME QUE APARECE NO BANCO
-    const CIDADE_TITULAR = "GUAXUPE"; // SUA CIDADE
+    
+    // --- CORREÇÃO AQUI: ADICIONEI O +55 PARA FUNCIONAR ---
+    const CHAVE_PIX_TITULAR = "+5535988440656"; 
+    
+    const NOME_TITULAR = "TIA ANA SALGADOS"; 
+    const CIDADE_TITULAR = "GUAXUPE"; 
 
     const QTD_NIVEL_1 = 50; const QTD_NIVEL_2 = 100; const DESC_NIVEL_1 = 0.05; const DESC_NIVEL_2 = 0.10; 
 
-    // SEUS PRODUTOS E PREÇOS ORIGINAIS
     const PRODUTOS = [
         { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg", opcoes: ["Frita na hora", "Congelada"] },
         { nome: "Bolinha", preco: 0.80, imagem: "bolinha.jpg", opcoes: ["Frita na hora", "Congelada"] },
@@ -188,7 +184,7 @@
     ];
 
     let carrinho = []; let intencaoPagamento = 'entrega'; let modoEntrega = 'now';
-    let valorFinalCalculado = 0; // Variável global para guardar o valor exato com desconto
+    let valorFinalCalculado = 0; 
 
     document.addEventListener("DOMContentLoaded", () => { renderizarProdutos(); });
 
@@ -229,7 +225,6 @@
         let valorSemDesconto = carrinho.reduce((acc, item) => acc + (item.qtd * item.precoBase), 0);
         let desc = 0; if (qtdTotal >= QTD_NIVEL_2) desc = DESC_NIVEL_2; else if (qtdTotal >= QTD_NIVEL_1) desc = DESC_NIVEL_1;
         
-        // Atualiza a variável global do valor final
         valorFinalCalculado = carrinho.reduce((acc, item) => acc + (item.qtd * (item.precoBase - desc)), 0);
 
         document.getElementById('floatTotal').innerText = valorFinalCalculado.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
@@ -277,7 +272,6 @@
 
     function enviarZap() {
         const nome = document.getElementById('nomeCliente').value.trim();
-        
         if(!nome) return alert("Digite seu nome!");
         
         let textoEntrega = modoEntrega === 'schedule' ? `📅 ${document.getElementById('inputData').value} às ${document.getElementById('inputHora').value}` : "🛵 ENTREGA IMEDIATA";
@@ -295,37 +289,29 @@
         document.getElementById('area-pagbank').classList.toggle('hidden-section', intencaoPagamento !== 'pagbank');
         document.getElementById('msg-entrega').classList.toggle('hidden-section', intencaoPagamento === 'pagbank');
         
-        // Se for Pix, já gera automaticamente para facilitar
         if(intencaoPagamento === 'pagbank') {
             gerarPixAutomatico();
         }
     }
 
-    // --- FUNÇÃO DE GERAR PIX SEM API (RODA DIRETO NO NAVEGADOR) ---
     function gerarPixAutomatico() {
         const btn = document.getElementById('btnPagarPagBank');
         const boxQr = document.getElementById('area-qrcode-gerado');
         const imgContainer = document.getElementById('img-qr-container');
         const inputCopia = document.getElementById('cola-pix-input');
         
-        // Esconde o botão e mostra o loading (simulado)
         btn.innerHTML = "Gerando QR Code...";
-        
-        // Pega o valor exato calculado com desconto
         const valor = valorFinalCalculado.toFixed(2);
         
-        // GERA O PAYLOAD DO PIX (CÓDIGO QUE O BANCO ENTENDE COM VALOR TRAVADO)
-        const payload = gerarPayloadPix(CHAVE_PIX_TITULAR, NOME_TITULAR, CIDADE_TITULAR, valor, "PEDIDO" + Date.now());
+        // --- CORREÇÃO AQUI: TXID MUDADO PARA '***' (PIX ESTÁTICO) ---
+        // ISSO CORRIGE O ERRO "EXPIRADO"
+        const payload = gerarPayloadPix(CHAVE_PIX_TITULAR, NOME_TITULAR, CIDADE_TITULAR, valor, "***");
         
-        // Mostra na tela
         setTimeout(() => {
             btn.style.display = "none";
             boxQr.style.display = "block";
-            
-            // Limpa QR Code antigo
             imgContainer.innerHTML = "";
             
-            // Gera a imagem do QR Code usando a biblioteca
             new QRCode(imgContainer, {
                 text: payload,
                 width: 200,
@@ -334,13 +320,10 @@
                 colorLight : "#ffffff",
                 correctLevel : QRCode.CorrectLevel.M
             });
-            
-            // Coloca o código no input invisível para copiar
             inputCopia.value = payload;
         }, 500);
     }
 
-    // --- LÓGICA TÉCNICA PARA MONTAR O CÓDIGO PIX (CRC16) ---
     function gerarPayloadPix(chave, nome, cidade, valor, txid) {
         const nomeTratado = nome.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         const cidadeTratada = cidade.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
