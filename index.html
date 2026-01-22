@@ -168,10 +168,7 @@
 
 <script>
     const WHATSAPP = "5535988440656"; 
-    
-    // --- CORREÇÃO AQUI: ADICIONEI O +55 PARA FUNCIONAR ---
-    const CHAVE_PIX_TITULAR = "+5535988440656"; 
-    
+    const CHAVE_PIX_TITULAR = "+5535988440656"; // Chave com +55
     const NOME_TITULAR = "TIA ANA SALGADOS"; 
     const CIDADE_TITULAR = "GUAXUPE"; 
 
@@ -294,6 +291,7 @@
         }
     }
 
+    // --- FUNÇÃO CORRIGIDA DE GERAÇÃO DO PAYLOAD PIX (EVITA ERRO DE TAMANHO) ---
     function gerarPixAutomatico() {
         const btn = document.getElementById('btnPagarPagBank');
         const boxQr = document.getElementById('area-qrcode-gerado');
@@ -301,11 +299,11 @@
         const inputCopia = document.getElementById('cola-pix-input');
         
         btn.innerHTML = "Gerando QR Code...";
+        
         const valor = valorFinalCalculado.toFixed(2);
         
-        // --- CORREÇÃO AQUI: TXID MUDADO PARA '***' (PIX ESTÁTICO) ---
-        // ISSO CORRIGE O ERRO "EXPIRADO"
-        const payload = gerarPayloadPix(CHAVE_PIX_TITULAR, NOME_TITULAR, CIDADE_TITULAR, valor, "***");
+        // GERA O PAYLOAD USANDO A NOVA FUNÇÃO SEGURA
+        const payload = PixPayload(CHAVE_PIX_TITULAR, NOME_TITULAR, CIDADE_TITULAR, valor, "***");
         
         setTimeout(() => {
             btn.style.display = "none";
@@ -324,18 +322,37 @@
         }, 500);
     }
 
-    function gerarPayloadPix(chave, nome, cidade, valor, txid) {
+    // --- NOVA LÓGICA DE MONTAGEM DO PIX (CALCULA O TAMANHO SOZINHO) ---
+    function PixPayload(chave, nome, cidade, valor, txid) {
         const nomeTratado = nome.substring(0, 25).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
         const cidadeTratada = cidade.substring(0, 15).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
-        const valorString = valor;
+        
+        // Monta o campo 26 (Merchant Account Info)
+        const gui = "0014BR.GOV.BCB.PIX";
+        const key = "01" + (chave.length < 10 ? "0" + chave.length : chave.length) + chave;
+        const merchantAccount = gui + key;
+        
+        // Função auxiliar para formatar campos ID + TAMANHO + VALOR
+        const formatField = (id, value) => {
+            const len = value.length < 10 ? "0" + value.length : value.length;
+            return id + len + value;
+        };
 
-        let payload = "00020126" + (14 + chave.length + 4) + "0014BR.GOV.BCB.PIX01" + (chave.length < 10 ? "0" + chave.length : chave.length) + chave + 
-                      "52040000530398654" + (valorString.length < 10 ? "0" + valorString.length : valorString.length) + valorString + 
-                      "5802BR59" + (nomeTratado.length < 10 ? "0" + nomeTratado.length : nomeTratado.length) + nomeTratado + 
-                      "60" + (cidadeTratada.length < 10 ? "0" + cidadeTratada.length : cidadeTratada.length) + cidadeTratada + 
-                      "62" + (7 + txid.length + 4) + "0503***63" + (txid.length < 10 ? "0" + txid.length : txid.length) + txid + "6304";
+        // Montagem sequencial
+        let payload = formatField("00", "01"); // Payload Format Indicator
+        payload += formatField("26", merchantAccount);
+        payload += formatField("52", "0000"); // MCC
+        payload += formatField("53", "986"); // Moeda (BRL)
+        payload += formatField("54", valor); // Valor
+        payload += formatField("58", "BR"); // País
+        payload += formatField("59", nomeTratado); // Nome
+        payload += formatField("60", cidadeTratada); // Cidade
+        payload += formatField("62", formatField("05", txid)); // TxID
 
+        // Adiciona o CRC16
+        payload += "6304";
         payload += calcularCRC16(payload);
+
         return payload;
     }
 
