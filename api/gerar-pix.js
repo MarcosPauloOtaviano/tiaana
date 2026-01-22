@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         };
 
         // Chama o PagBank
-        const response = await fetch("https://api.pagseguro.com/", {
+        const response = await fetch("https://api.pagseguro.com/orders", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -95,3 +95,4 @@ export default async function handler(req, res) {
     }
 
 }
+
