@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         };
 
         // Chama o PagBank
-        const response = await fetch("https://api.pagseguro.com/orders", {
+        const response = await fetch("https://api.pagseguro.com/", {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -93,4 +93,5 @@ export default async function handler(req, res) {
         console.error("Erro interno:", error);
         return res.status(500).json({ error: error.message });
     }
+
 }
