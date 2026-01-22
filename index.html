@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salgados da Tia Ana – Sabor de Casa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #e63946;
+            --text: #4a4a4a;
+            --success: #25D366;
+            --pagbank-color: #00C04D;
+            --bg: #fdfbf7;
+        }
+
+        body { font-family: 'Quicksand', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 100px; }
+        
+        /* HEADER */
+        .header-container { background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; overflow: hidden; margin-bottom: 30px; position: relative; }
+        
+        /* VOLTEI PARA O NOME ORIGINAL */
+        .header-banner { width: 100%; height: 200px; background-color: #eee; background-image: url('fundo.jpg'); background-size: cover; background-position: center; }
+        
+        .header-content { padding: 0 20px 40px 20px; text-align: center; position: relative; background: white; margin-top: -20px; border-top-left-radius: 30px; border-top-right-radius: 30px; }
+        
+        .avatar-vovo { width: 110px; height: 110px; background-color: white; border-radius: 50%; margin: -60px auto 15px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; position: relative; z-index: 10; overflow: hidden; }
+        .avatar-vovo img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .welcome-title { font-family: 'Caveat', cursive; font-size: 42px; color: #d35400; margin: 0; line-height: 1.1; }
+        .welcome-text { font-size: 16px; line-height: 1.6; max-width: 600px; margin: 15px auto; color: #5d4037; }
+        .btn-descer { background: var(--primary); color: white; border: none; padding: 12px 35px; border-radius: 50px; font-family: 'Quicksand', sans-serif; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(230, 57, 70, 0.3); margin-top: 10px; transition: transform 0.2s; }
+        .btn-descer:hover { transform: scale(1.05); }
+
+        /* CONTENT */
+        .container { max-width: 800px; margin: 0 auto; padding: 0 15px; position: relative; z-index: 10; }
+        .section-title { text-align: center; font-family: 'Caveat', cursive; color: var(--primary); font-size: 32px; margin-top: 20px; margin-bottom: 10px; }
+        .promo-banner { background: white; border: 2px dashed #ffeeba; color: #d35400; padding: 15px; border-radius: 15px; text-align: center; font-size: 15px; margin-bottom: 25px; font-weight: bold; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .product-img-container { height: 150px; background-color: #fce4ec; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 12px; }
+        .product-header { display: flex; justify-content: space-between; align-items: center; }
+        .product-title { font-weight: 700; font-size: 20px; margin: 0; color: #d35400; font-family: 'Caveat', cursive; }
+        .product-price { font-size: 18px; font-weight: bold; color: var(--primary); background: #fff0f0; padding: 5px 10px; border-radius: 10px; }
+        .label-small { font-size: 12px; color: #888; font-weight: 600; margin-left: 2px; }
+        select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #eee; background-color: #f9f9f9; font-size: 14px; color: #555; font-family: 'Quicksand', sans-serif; }
+        .btn-add-card { background: #d35400; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; margin-top: 5px; box-shadow: 0 4px 6px rgba(211, 84, 0, 0.2); }
+
+        /* CART & MODAL */
+        .cart-float-btn { position: fixed; bottom: 20px; right: 20px; background-color: var(--success); color: white; padding: 12px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; cursor: pointer; z-index: 1000; font-weight: bold; font-size: 16px; border: none; font-family: 'Quicksand', sans-serif; transition: transform 0.3s; }
+        .cart-float-btn.hidden { transform: scale(0); pointer-events: none; }
+        .badge-count { background: white; color: var(--success); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-overlay.active { display: flex; }
+        .modal-box { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); max-height: 90vh; display: flex; flex-direction: column; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .modal-header h2 { margin: 0; font-size: 24px; color: var(--text); font-family: 'Caveat', cursive; }
+        .btn-close { background: none; border: none; font-size: 28px; color: #999; cursor: pointer; }
+        .btn-empty { background: none; border: 1px solid #ffcccc; color: #e63946; border-radius: 8px; padding: 5px 10px; font-size: 12px; cursor: pointer; }
+        .modal-body { flex-grow: 1; overflow-y: auto; }
+        .cart-item-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 15px; }
+        .price-container { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+        .price-old { text-decoration: line-through; color: #999; font-size: 16px; margin-bottom: 2px; display: none; }
+        .checkout-total { font-size: 26px; font-weight: 800; color: var(--success); display: block; }
+        .discount-tag { font-size: 13px; color: #d35400; display: block; text-align: right; font-weight: bold; margin-bottom: 10px; }
+        .checkout-input { width: 100%; padding: 15px; border: 2px solid #eee; background: #fafafa; border-radius: 12px; font-size: 16px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+        .delivery-toggle { display: flex; gap: 10px; margin-bottom: 15px; background: #fff8e1; padding: 5px; border-radius: 15px; }
+        .toggle-opt { flex: 1; padding: 10px; text-align: center; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: bold; color: #6d4c41; border: 1px solid transparent; transition: 0.2s; }
+        .toggle-opt.active { background: white; color: #d35400; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .date-inputs { display: none; gap: 10px; margin-bottom: 15px; }
+        .date-inputs input { flex: 1; }
+        .payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
+        .pay-option { border: 2px solid #eee; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; font-weight: bold; color: #888; transition: 0.2s; display: block; }
+        .pay-option.selected { border-color: #555; background: #eee; color: #333; }
+        
+        /* ESTILO PAGBANK - MUDADO PARA VERDE */
+        .pay-option-pagbank { 
+            border: none; padding: 16px; text-align: center; border-radius: 12px; 
+            cursor: pointer; font-weight: bold; color: white; 
+            background: var(--pagbank-color); 
+            transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; 
+            box-shadow: 0 4px 10px rgba(0, 192, 77, 0.3); font-size: 16px; 
+        }
+        .pay-option-pagbank:hover { filter: brightness(0.95); }
+
+        .btn-finalizar { width: 100%; background: var(--success); color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .hidden-section { display: none !important; }
+        .success-msg { background: #d4edda; color: #155724; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #c3e6cb; }
+        .info-box { background-color: #e3f2fd; color: #0d47a1; padding: 12px; border-radius: 12px; font-size: 14px; margin-bottom: 15px; text-align: center; border: 1px solid #bbdefb; }
+    </style>
+</head>
+<body>
+
+<header class="header-container">
+    <div class="header-banner"></div>
+    <div class="header-content">
+        <div class="avatar-vovo">
+            <img src="logo.jpg" alt="Logo Tia Ana" onerror="this.src='https://via.placeholder.com/150?text=Vovo'">
+        </div>
+        <h1 class="welcome-title">O tempero que abraça</h1>
+        <div class="welcome-text">
+            <p>Ôh meu filho, puxa uma cadeira e sinta-se em casa!</p>
+            <p>Aqui na <strong>Tia Ana</strong> não tem segredo, tem carinho.</p>
+        </div>
+        <button class="btn-descer" onclick="document.getElementById('cardapio-area').scrollIntoView({behavior: 'smooth'})">
+            Ver as Delícias 👇
+        </button>
+    </div>
+</header>
+
+<div class="container" id="cardapio-area">
+    <h2 class="section-title">Nossas Quitandas</h2>
+    <div class="promo-banner">🔥 <strong>Promoção Progressiva:</strong><br>📦 Acima de 50 un: Desconto da tia Ana<br>📦 Acima de 100 un: Super desconto!</div>
+    <div class="product-grid" id="gridProdutos"></div>
+</div>
+
+<button id="floatingCart" class="cart-float-btn hidden" onclick="abrirModal()">🛒 <span id="floatTotal">R$ 0,00</span><div class="badge-count" id="floatCount">0</div></button>
+
+<div id="modalOverlay" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-header"><h2>Seu Pedido 📝</h2><div style="display:flex; gap:10px;"><button class="btn-empty" onclick="esvaziarCarrinho()">Limpar</button><button class="btn-close" onclick="fecharModal()">&times;</button></div></div>
+        <div class="modal-body" id="listaItensModal"></div>
+        <div class="modal-footer">
+            <div class="price-container"><span id="precoAntigo" class="price-old">R$ 0,00</span><div><span style="font-size:14px; color:#888; margin-right:5px;">Total:</span><span class="checkout-total" id="modalTotalValor">R$ 0,00</span></div><span id="msgEconomia" class="discount-tag" style="display:none;">🎉 Economia aplicada!</span></div>
+            
+            <div id="step-dados">
+                <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; margin-top:15px; text-align:left;">Para quando é?</div>
+                <div class="delivery-toggle"><div class="toggle-opt active" id="modeNow" onclick="mudarModoEntrega('now')">Pra agora 🛵</div><div class="toggle-opt" id="modeSchedule" onclick="mudarModoEntrega('schedule')">Encomendar 📅</div></div>
+                <div class="date-inputs" id="areaAgendamento"><input type="date" id="inputData" class="checkout-input"><input type="time" id="inputHora" class="checkout-input"></div>
+                
+                <div style="margin-bottom:8px; font-size:14px; font-weight:bold; color:#555; text-align:left;">Como pretende pagar?</div>
+                <div class="payment-options">
+                    <div class="pay-option" id="optPagBank" onclick="selecionarIntencaoPagamento('pagbank')">
+                        💳 Pagar pelo Site (PagBank)
+                    </div>
+                    <div class="pay-option selected" id="optEntrega" onclick="selecionarIntencaoPagamento('entrega')">
+                        💵 Pagar na Entrega (Dinheiro/Máquina)
+                    </div>
+                </div>
+                
+                <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
+                
+                <div id="campoCPF" style="display:none;">
+                    <input type="text" id="cpfCliente" class="checkout-input" placeholder="CPF para o Pix (Apenas números)" maxlength="14">
+                </div>
+                
+                <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">1. Enviar Pedido no Zap 📲</button>
+            </div>
+
+            <div id="step-pagamento" class="hidden-section">
+                <div class="success-msg">✅ Pedido Enviado no WhatsApp!</div>
+                <div id="msg-entrega" class="hidden-section" style="text-align:center; color:#555; margin-bottom:20px;">
+                    Obrigado! Aguarde a confirmação da Tia Ana no Zap.
+                </div>
+                <div id="area-pagbank" class="hidden-section">
+                    <div id="intro-pagamento" style="text-align:center; margin-bottom:10px; color:#555;">Agora finalize seu pagamento seguro:</div>
+                    <div class="pay-option-pagbank" id="btnPagarPagBank" onclick="gerarPixAutomatico()">
+                        💠 Gerar Pix PagBank
+                    </div>
+                    <div id="area-qrcode-gerado" style="display:none; text-align:center; background:#f0fff4; padding:15px; border-radius:10px; border:1px solid #bdfecb; margin-top:10px;">
+                        <span style="font-weight:bold; color:#00C04D; font-size:14px;">Escaneie ou Copie o código:</span>
+                        <div id="img-qr-container" style="margin:10px auto; width:100%; display:flex; justify-content:center;"></div>
+                        <textarea id="cola-pix-input" style="width:1px; height:1px; opacity:0; position:absolute;"></textarea>
+                        <button onclick="copiarCodigoPix()" style="background:#00C04D; color:white; border:none; padding:10px 20px; border-radius:50px; cursor:pointer; font-weight:bold; font-size:14px; box-shadow:0 4px 10px rgba(0,192,77,0.3);">
+                            📑 Copiar Código Pix
+                        </button>
+                    </div>
+                </div>
+                <div style="margin-top:20px; text-align:center;"><a href="#" onclick="fecharModal()" style="color:#999; text-decoration:none; font-size:14px;">Fechar e continuar comprando</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const WHATSAPP = "5535988440656"; 
+    const QTD_NIVEL_1 = 50; const QTD_NIVEL_2 = 100; const DESC_NIVEL_1 = 0.05; const DESC_NIVEL_2 = 0.10; 
+
+    // VOLTEI OS NOMES ORIGINAIS AQUI
+    const PRODUTOS = [
+        { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg", opcoes: ["Frita na hora", "Congelada"] },
+        { nome: "Bolinha", preco: 0.80, imagem: "bolinha.jpg", opcoes: ["Frita na hora", "Congelada"] },
+        { nome: "Esfirra", preco: 0.90, imagem: "esfirra.jpg", opcoes: ["Assadinha", "Congelada"] }
+    ];
+
+    let carrinho = []; let intencaoPagamento = 'entrega'; let modoEntrega = 'now';
+    document.addEventListener("DOMContentLoaded", () => { renderizarProdutos(); });
+
+    function renderizarProdutos() {
+        const grid = document.getElementById('gridProdutos'); grid.innerHTML = '';
+        PRODUTOS.forEach((prod, index) => {
+            let opcoesHtml = prod.opcoes.map(op => `<option value="${op}">${(op.includes('Frita')||op.includes('Assadinha'))?'🔥':'❄️'} ${op}</option>`).join('');
+            let qtdHtml = Array.from({length: 12}, (_, i) => (i+1)*25).map(i => `<option value="${i}">${i} un.</option>`);
+            qtdHtml.unshift('<option value="1">1 un.</option>');
+            
+            const card = document.createElement('div'); card.className = 'product-card';
+            card.innerHTML = `<div class="product-img-container"><img src="${prod.imagem}" class="product-img" alt="${prod.nome}" onerror="this.src='https://via.placeholder.com/400x250?text=Foto+Indisponivel'"></div>
+                <div class="product-info"><div class="product-header"><h3 class="product-title">${prod.nome}</h3><span class="product-price">R$ ${prod.preco.toFixed(2).replace('.', ',')}</span></div>
+                <div class="control-group"><span class="label-small">Opção:</span><select id="tipo-${index}">${opcoesHtml}</select></div>
+                <div class="control-group"><span class="label-small">Qtd:</span><select id="qtd-${index}">${qtdHtml}</select></div>
+                <button class="btn-add-card" id="btn-add-${index}" onclick="adicionar(${index})">Colocar na Cesta</button></div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function adicionar(index) {
+        const produto = PRODUTOS[index];
+        const tipo = document.getElementById(`tipo-${index}`).value;
+        const qtd = parseInt(document.getElementById(`qtd-${index}`).value);
+        const itemIndex = carrinho.findIndex(item => item.nome === produto.nome && item.tipo === tipo);
+        if(itemIndex > -1) carrinho[itemIndex].qtd += qtd; else carrinho.push({ id: Date.now(), nome: produto.nome, precoBase: produto.preco, tipo, qtd });
+        atualizarCarrinho();
+        const btn = document.getElementById(`btn-add-${index}`);
+        btn.innerHTML = "✅ Adicionado!"; btn.style.background = "#25D366"; setTimeout(() => { btn.innerHTML = "Colocar na Cesta"; btn.style.background = ""; }, 700);
+        document.getElementById('floatingCart').classList.remove('hidden');
+    }
+
+    function remover(id) { carrinho = carrinho.filter(item => item.id !== id); atualizarCarrinho(); if(carrinho.length === 0) fecharModal(); }
+    function esvaziarCarrinho() { if(confirm("Esvaziar cesta?")) { carrinho = []; atualizarCarrinho(); fecharModal(); } }
+
+    function atualizarCarrinho() {
+        let qtdTotal = carrinho.reduce((acc, item) => acc + item.qtd, 0);
+        let valorSemDesconto = carrinho.reduce((acc, item) => acc + (item.qtd * item.precoBase), 0);
+        let desc = 0; if (qtdTotal >= QTD_NIVEL_2) desc = DESC_NIVEL_2; else if (qtdTotal >= QTD_NIVEL_1) desc = DESC_NIVEL_1;
+        let valorComDesconto = carrinho.reduce((acc, item) => acc + (item.qtd * (item.precoBase - desc)), 0);
+
+        document.getElementById('floatTotal').innerText = valorComDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('floatCount').innerText = carrinho.length;
+        document.getElementById('modalTotalValor').innerText = valorComDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        
+        const lista = document.getElementById('listaItensModal'); lista.innerHTML = '';
+        carrinho.forEach(item => {
+            lista.innerHTML += `<div class="cart-item-row"><div><strong>${item.qtd}x ${item.nome}</strong> <span style="font-size:12px">(${item.tipo})</span></div><div style="text-align:right;">R$ ${(item.qtd * (item.precoBase - desc)).toFixed(2)} <span onclick="remover(${item.id})" style="color:red;cursor:pointer;margin-left:5px">❌</span></div></div>`;
+        });
+        
+        if(desc > 0) { document.getElementById('precoAntigo').style.display = 'block'; document.getElementById('precoAntigo').innerText = valorSemDesconto.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}); document.getElementById('msgEconomia').style.display = 'block'; }
+        else { document.getElementById('precoAntigo').style.display = 'none'; document.getElementById('msgEconomia').style.display = 'none'; }
+    }
+
+    function mudarModoEntrega(modo) { modoEntrega = modo; document.getElementById('modeNow').classList.toggle('active', modo === 'now'); document.getElementById('modeSchedule').classList.toggle('active', modo !== 'now'); document.getElementById('areaAgendamento').style.display = modo === 'now' ? 'none' : 'flex'; }
+    
+    function selecionarIntencaoPagamento(metodo) { 
+        intencaoPagamento = metodo; 
+        document.getElementById('optEntrega').classList.toggle('selected', metodo === 'entrega'); 
+        document.getElementById('optPagBank').classList.toggle('selected', metodo === 'pagbank'); 
+        
+        // MOSTRA O CAMPO CPF SE FOR PAGBANK
+        const divCpf = document.getElementById('campoCPF');
+        if(metodo === 'pagbank') { 
+            divCpf.style.display = "block";
+            document.getElementById('optPagBank').style.background="#f0fff4"; 
+            document.getElementById('optPagBank').style.border="2px solid #00C04D"; 
+            document.getElementById('optEntrega').style.background=""; 
+            document.getElementById('optEntrega').style.border=""; 
+        } else { 
+            divCpf.style.display = "none";
+            document.getElementById('optPagBank').style.background=""; 
+            document.getElementById('optPagBank').style.border=""; 
+            document.getElementById('optEntrega').style.background="#eee"; 
+            document.getElementById('optEntrega').style.border="2px solid #555"; 
+        } 
+    }
+    
+    function abrirModal() { 
+        document.getElementById('modalOverlay').classList.add('active'); 
+        document.getElementById('step-dados').classList.remove('hidden-section'); 
+        document.getElementById('step-pagamento').classList.add('hidden-section'); 
+        document.getElementById('btnPagarPagBank').style.display = "flex";
+        document.getElementById('area-qrcode-gerado').style.display = "none";
+    }
+    
+    function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+
+    function enviarZap() {
+        const nome = document.getElementById('nomeCliente').value.trim();
+        const cpf = document.getElementById('cpfCliente').value.trim();
+        
+        if(!nome) return alert("Digite seu nome!");
+        
+        // VALIDAÇÃO SIMPLES DO CPF
+        if(intencaoPagamento === 'pagbank' && cpf.length < 11) {
+            return alert("Para pagar com Pix PagBank, você precisa digitar o CPF!");
+        }
+
+        let textoEntrega = modoEntrega === 'schedule' ? `📅 ${document.getElementById('inputData').value} às ${document.getElementById('inputHora').value}` : "🛵 ENTREGA IMEDIATA";
+        let msg = `*PEDIDO TIA ANA*%0A👤 ${nome}%0A💰 Total: ${document.getElementById('modalTotalValor').innerText}%0A${textoEntrega}%0A%0A*ITENS:*%0A` + carrinho.map(i => `${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
+        
+        msg += `%0A%0APagamento: ${intencaoPagamento === 'pagbank' ? '💳 PELO SITE (PagBank)' : '💵 NA ENTREGA'}`;
+        
+        window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
+        mostrarTelaPagamento();
+    }
+
+    function mostrarTelaPagamento() {
+        document.getElementById('step-dados').classList.add('hidden-section'); 
+        document.getElementById('step-pagamento').classList.remove('hidden-section');
+        document.getElementById('area-pagbank').classList.toggle('hidden-section', intencaoPagamento !== 'pagbank');
+        document.getElementById('msg-entrega').classList.toggle('hidden-section', intencaoPagamento === 'pagbank');
+    }
+
+    async function gerarPixAutomatico() {
+        const btn = document.getElementById('btnPagarPagBank');
+        const boxQr = document.getElementById('area-qrcode-gerado');
+        const imgContainer = document.getElementById('img-qr-container');
+        const inputCopia = document.getElementById('cola-pix-input');
+        
+        const valorString = document.getElementById('modalTotalValor').innerText.replace("R$","").replace(".","").replace(",","."); 
+        const valor = parseFloat(valorString);
+        const nome = document.getElementById('nomeCliente').value || "Cliente";
+        const cpf = document.getElementById('cpfCliente').value.replace(/\D/g, ''); 
+
+        if(!cpf) return alert("Erro: CPF não preenchido.");
+
+        btn.innerHTML = "⏳ Conectando PagBank...";
+        btn.style.opacity = "0.7";
+        btn.style.pointerEvents = "none";
+
+        try {
+            const response = await fetch('/api/gerar-pix', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ valor: valor, nome: nome, cpf: cpf })
+            });
+
+            const data = await response.json();
+
+            if (data.qr_code_base64_url || data.qr_code) {
+                btn.style.display = "none"; 
+                document.getElementById('intro-pagamento').innerText = "Pagamento gerado com sucesso!";
+                boxQr.style.display = "block";
+                
+                // Adaptação para o PagBank (que as vezes manda URL em vez de base64 puro)
+                if(data.qr_code_base64_url) {
+                     imgContainer.innerHTML = `<img src="${data.qr_code_base64_url}" style="width:200px;">`;
+                } else {
+                     imgContainer.innerHTML = `<img src="data:image/png;base64,${data.qr_code_base64}" style="width:200px;">`;
+                }
+                
+                inputCopia.value = data.qr_code;
+            } else {
+                alert("Erro ao gerar Pix: " + (data.error || "Tente novamente."));
+                btn.innerHTML = "💠 Tentar Novamente"; btn.style.pointerEvents = "auto";
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Ainda não configuramos o Token do PagBank! (Erro 500)");
+            btn.innerHTML = "💠 Tentar Novamente"; btn.style.pointerEvents = "auto";
+        }
+    }
+    
+    function copiarCodigoPix() { const cp = document.getElementById("cola-pix-input"); cp.select(); navigator.clipboard.writeText(cp.value); alert("Copiado!"); }
+</script>
+</body>
+</html>
