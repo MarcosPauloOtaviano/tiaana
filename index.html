@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salgados da Tia Ana – Sabor de Casa</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         :root {
@@ -40,25 +43,42 @@
         .btn-add:hover { background: #e67e22; }
 
         /* CARRINHO FLUTUANTE */
-        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold; border: none; z-index: 100; display: none; font-family: 'Quicksand', sans-serif; font-size: 16px; }
+        .cart-float { position: fixed; bottom: 20px; right: 20px; background: var(--success); color: white; padding: 15px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); cursor: pointer; font-weight: bold; border: none; z-index: 100; display: none; font-family: 'Quicksand', sans-serif; font-size: 16px; transition: transform 0.2s; }
+        .cart-float:hover { transform: scale(1.05); }
 
         /* MODAL */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
         .modal-box { background: white; width: 100%; max-width: 450px; border-radius: 25px; padding: 25px; max-height: 90vh; overflow-y: auto; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
         .checkout-input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; font-size: 16px; }
         
-        /* PIX */
+        /* ÁREA PIX COM QR CODE */
         .pix-box { background: #f0fdfa; border: 2px dashed var(--pix-color); border-radius: 15px; padding: 20px; margin: 15px 0; display: none; }
         .pix-key { font-weight: bold; color: #0f766e; font-size: 18px; display: block; margin: 10px 0; letter-spacing: 1px; }
-        .btn-copy { background: var(--pix-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; }
+        #qrcode-container { display: flex; justify-content: center; margin: 20px 0; background: white; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .btn-copy { background: var(--pix-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: opacity 0.2s; font-family: 'Quicksand', sans-serif; }
         .btn-copy:active { opacity: 0.7; }
 
-        /* BOTÕES FINAIS */
-        .btn-final { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; font-family: 'Quicksand', sans-serif; transition: transform 0.1s; }
+        /* BOTÕES FINAIS (ATUALIZADOS) */
+        .btn-final { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; font-family: 'Quicksand', sans-serif; transition: all 0.2s; }
         .btn-final:active { transform: scale(0.98); }
+        
         .btn-pay-now { background: var(--pix-color); color: white; box-shadow: 0 4px 10px rgba(50, 188, 173, 0.3); }
         .btn-confirm-pay { background: var(--success); color: white; display: none; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
-        .btn-pay-later { background: none; color: #888; text-decoration: underline; font-size: 14px; margin-top: 15px; }
+        
+        /* NOVO ESTILO DO BOTÃO "PAGAR DEPOIS" */
+        .btn-pay-later { 
+            background: #f1f5f9; 
+            color: #64748b; 
+            border: 2px solid #e2e8f0;
+            text-decoration: none; 
+            margin-top: 15px; 
+            font-weight: 700;
+        }
+        .btn-pay-later:hover {
+            background: #e2e8f0;
+            border-color: #cbd5e1;
+            color: #475569;
+        }
 
         .item-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 15px; }
     </style>
@@ -97,17 +117,28 @@
         <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
 
         <div id="areaPix" class="pix-box">
-            <span style="font-size: 15px; color: #555; font-weight: 600;">💠 Chave Pix para Pagamento:</span>
+            <span style="font-size: 15px; color: #555; font-weight: 600;">💠 Escaneie o QR Code para pagar:</span>
+            
+            <div id="qrcode-container"></div>
+            
+            <span style="font-size: 14px; color: #555;">Ou use a chave:</span>
             <span class="pix-key" id="chavePixTexto">35988440656</span>
+            
             <button class="btn-copy" onclick="copiarPix()">Copiar Código Copia e Cola 📋</button>
             <textarea id="pixCopiaCola" style="position: absolute; left: -9999px;"></textarea>
-            <p style="font-size: 12px; color: #666; margin-top: 10px;">Após pagar, clique no botão verde abaixo para nos enviar o comprovante.</p>
+            
+            <p style="font-size: 12px; color: #666; margin-top: 15px; background: #fff; padding: 10px; border-radius: 8px;">
+                ⚠️ <strong>Importante:</strong> Após realizar o pagamento no seu banco, clique no botão verde abaixo para nos enviar o comprovante.
+            </p>
         </div>
 
         <div id="controlesFinais">
-            <button class="btn-final btn-pay-now" id="btnShowPix" onclick="mostrarOpcaoPix()">1. Pagar agora com Pix 💠</button>
+            <button class="btn-final btn-pay-now" id="btnShowPix" onclick="mostrarOpcaoPix()">1. Pagar agora com Pix (QR Code) 💠</button>
             <button class="btn-final btn-confirm-pay" id="btnConfirmado" onclick="enviarZap(true)">2. JÁ PAGUEI! ENVIAR PEDIDO 📑</button>
-            <button class="btn-final btn-pay-later" onclick="enviarZap(false)">Pagar na entrega ou depois</button>
+            
+            <button class="btn-final btn-pay-later" onclick="enviarZap(false)">
+                🚚 Pagar na entrega ou depois
+            </button>
         </div>
         
         <button onclick="fecharModal()" style="margin-top: 20px; background: none; border: none; color: #bbb; cursor: pointer; font-size: 14px;">Voltar e mudar itens</button>
@@ -116,7 +147,7 @@
 
 <script>
     const WHATSAPP = "5535988440656"; 
-    const CHAVE_PIX = "35988440656"; // Chave configurada conforme solicitado
+    const CHAVE_PIX = "35988440656"; // Sua chave fixa
 
     const PRODUTOS = [
         { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg" },
@@ -125,6 +156,7 @@
     ];
 
     let carrinho = [];
+    let qrCodeGenerator = null; // Variável para guardar o gerador de QR Code
 
     function renderizarProdutos() {
         const grid = document.getElementById('gridProdutos');
@@ -158,21 +190,11 @@
         const qtd = parseInt(document.getElementById(`qtd-${index}`).value);
         const tipo = document.getElementById(`tipo-${index}`).value;
         
-        // Verifica se já existe o mesmo item com o mesmo tipo no carrinho
         const existente = carrinho.find(item => item.nome === p.nome && item.tipo === tipo);
-        if(existente) {
-            existente.qtd += qtd;
-        } else {
-            carrinho.push({ nome: p.nome, preco: p.preco, qtd, tipo });
-        }
+        if(existente) { existente.qtd += qtd; } else { carrinho.push({ nome: p.nome, preco: p.preco, qtd, tipo }); }
         
         atualizarCarrinho();
-        
-        // Pequeno feedback no botão
-        const btn = event.target;
-        const originalText = btn.innerText;
-        btn.innerText = "✅ Adicionado!";
-        setTimeout(() => btn.innerText = originalText, 800);
+        const btn = event.target; const originalText = btn.innerText; btn.innerText = "✅ Adicionado!"; setTimeout(() => btn.innerText = originalText, 800);
     }
 
     function atualizarCarrinho() {
@@ -191,9 +213,25 @@
             </div>
         `).join('');
         
-        // Gera o Payload simplificado do Pix Copia e Cola
+        // === MÁGICA DO QR CODE ===
         const payload = `00020126360014BR.GOV.BCB.PIX0114${CHAVE_PIX}520400005303986540${total.toFixed(2)}5802BR5915TIA_ANA_SALGADO6007GUAXUPE62070503***6304`;
         document.getElementById('pixCopiaCola').value = payload;
+
+        // Limpa o QR Code anterior
+        const qrContainer = document.getElementById('qrcode-container');
+        qrContainer.innerHTML = '';
+
+        // Gera o novo QR Code se houver valor
+        if (total > 0) {
+            qrCodeGenerator = new QRCode(qrContainer, {
+                text: payload,
+                width: 180,
+                height: 180,
+                colorDark : "#000000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        }
     }
 
     function mostrarOpcaoPix() {
@@ -203,20 +241,19 @@
         document.getElementById('areaPix').style.display = 'block';
         document.getElementById('btnShowPix').style.display = 'none';
         document.getElementById('btnConfirmado').style.display = 'block';
+        // Rola a tela para o QR Code
+        document.getElementById('areaPix').scrollIntoView({behavior: 'smooth'});
     }
 
     function copiarPix() {
         const campo = document.getElementById('pixCopiaCola');
-        campo.select();
-        campo.setSelectionRange(0, 99999); // Para mobile
-        document.execCommand('copy');
-        alert("Código Pix copiado! Agora abra o aplicativo do seu banco e use a opção 'Pix Copia e Cola'.");
+        campo.select(); campo.setSelectionRange(0, 99999); document.execCommand('copy');
+        alert("Código Pix copiado! Abra seu banco e use a opção 'Pix Copia e Cola'.");
     }
 
     function abrirModal() { document.getElementById('modalOverlay').style.display = 'flex'; }
     function fecharModal() { 
         document.getElementById('modalOverlay').style.display = 'none'; 
-        // Reseta os botões ao fechar
         document.getElementById('areaPix').style.display = 'none';
         document.getElementById('btnShowPix').style.display = 'block';
         document.getElementById('btnConfirmado').style.display = 'none';
@@ -239,7 +276,6 @@
         window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
     }
 
-    // Inicialização
     renderizarProdutos();
 </script>
 </body>
