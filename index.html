@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -45,7 +45,8 @@
         .promo-banner { background: white; border: 2px dashed #ffeeba; color: #d35400; padding: 15px; border-radius: 15px; text-align: center; font-size: 15px; margin-bottom: 25px; font-weight: bold; }
         
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .product-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); display: flex; flex-direction: column; transition: transform 0.2s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 15px 25px rgba(0,0,0,0.1); }
         
         .product-img-container { height: 150px; background-color: #fce4ec; display:flex; align-items:center; justify-content:center; font-size:50px; }
         .product-img { width: 100%; height: 100%; object-fit: cover; }
@@ -53,7 +54,7 @@
         .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
         .product-title { font-weight: 700; font-size: 18px; margin: 0; color: #d35400; font-family: 'Quicksand', sans-serif; }
         .product-desc { font-size: 12px; color: #888; margin-top: -5px; }
-        .product-price { font-size: 16px; font-weight: bold; color: var(--primary); background: #fff0f0; padding: 4px 8px; border-radius: 8px; }
+        .product-price { font-size: 16px; font-weight: bold; color: var(--primary); background: #fff0f0; padding: 4px 8px; border-radius: 8px; display: inline-block; width: fit-content;}
         
         .control-group { margin-top: 5px; }
         .label-small { font-size: 12px; color: #888; font-weight: 600; margin-left: 2px; }
@@ -61,6 +62,7 @@
         
         .btn-add-card { background: #d35400; color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 15px; margin-top: 10px; box-shadow: 0 4px 6px rgba(211, 84, 0, 0.2); transition: 0.2s; }
         .btn-add-card:active { transform: scale(0.98); }
+        .btn-add-card:hover { background: #b84900; }
 
         /* CART & MODAL */
         .cart-float-btn { position: fixed; bottom: 20px; right: 20px; background-color: var(--success); color: white; padding: 12px 25px; border-radius: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; cursor: pointer; z-index: 1000; font-weight: bold; font-size: 16px; border: none; font-family: 'Quicksand', sans-serif; transition: transform 0.3s; }
@@ -73,13 +75,16 @@
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .modal-header h2 { margin: 0; font-size: 24px; color: var(--text); font-family: 'Caveat', cursive; }
-        .btn-close { background: none; border: none; font-size: 28px; color: #999; cursor: pointer; }
+        .btn-close { background: none; border: none; font-size: 28px; color: #999; cursor: pointer; transition: color 0.2s; }
+        .btn-close:hover { color: #333; }
         
         .modal-body { flex-grow: 1; overflow-y: auto; }
         .cart-item-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; font-size: 15px; }
+        .empty-cart-msg { text-align: center; color: #888; padding: 20px 0; font-style: italic; }
         
         .checkout-total { font-size: 26px; font-weight: 800; color: var(--success); display: block; text-align: right; }
         .checkout-input { width: 100%; padding: 15px; border: 2px solid #eee; background: #fafafa; border-radius: 12px; font-size: 16px; margin-bottom: 10px; box-sizing: border-box; font-family: 'Quicksand', sans-serif; }
+        .checkout-input:focus { outline: none; border-color: #d35400; }
         
         .payment-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; }
         .pay-option { border: 2px solid #eee; padding: 15px; text-align: center; border-radius: 12px; cursor: pointer; font-weight: bold; color: #888; transition: 0.2s; display: block; }
@@ -93,10 +98,17 @@
             box-shadow: 0 4px 10px rgba(0, 192, 77, 0.3); font-size: 16px; 
         }
 
-        .btn-finalizar { width: 100%; background: var(--success); color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
+        .btn-finalizar { width: 100%; background: var(--success); color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); transition: background 0.2s;}
+        .btn-finalizar:hover { background: #20b858; }
+        .btn-finalizar:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+        
         .hidden-section { display: none !important; }
         
         .warning-box { background: #fff3cd; color: #856404; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 1px solid #ffeeba; display: none; }
+
+        /* TOAST NOTIFICATION */
+        .toast-notification { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #333; color: white; padding: 12px 24px; border-radius: 30px; font-weight: bold; z-index: 3000; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); opacity: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .toast-notification.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     </style>
 </head>
 <body>
@@ -107,10 +119,10 @@
         <div class="avatar-vovo">
             <img src="logo.jpg" alt="Logo Tia Ana" onerror="this.src='https://via.placeholder.com/150?text=Vovo'">
         </div>
-        <h1 class="welcome-title">Salgados da tia ana</h1>
+        <h1 class="welcome-title">Salgados da Tia ANA</h1>
         <div class="welcome-text">
-            <p>Café quentinho, pão macio</p>
-            <p>e rosca doce</p>
+            <p>Tudo feitinho com a mãos e coração</p>
+            <p>chega mais, fique a vontade</p>
             <p><b>A Tia Ana cuida do sabor!</b></p>
         </div>
     </div>
@@ -128,8 +140,8 @@
 
 <button id="floatingCart" class="cart-float-btn hidden" onclick="abrirModal()">🛒 <span id="floatTotal">R$ 0,00</span><div class="badge-count" id="floatCount">0</div></button>
 
-<div id="modalOverlay" class="modal-overlay">
-    <div class="modal-box">
+<div id="modalOverlay" class="modal-overlay" onclick="fecharModalFora(event)">
+    <div class="modal-box" onclick="event.stopPropagation()">
         <div class="modal-header"><h2>Seu Pedido 📝</h2><button class="btn-close" onclick="fecharModal()">&times;</button></div>
         <div class="modal-body" id="listaItensModal"></div>
         <div class="modal-footer">
@@ -150,6 +162,7 @@
                 </div>
                 
                 <input type="text" id="nomeCliente" class="checkout-input" placeholder="Seu nome completo...">
+                <input type="text" id="enderecoCliente" class="checkout-input" placeholder="Endereço de entrega (Rua, Número, Bairro)..." style="margin-top: -5px;">
 
                 <div id="area-pix-completa" style="display:none;">
                     <div id="area-qrcode-gerado" style="text-align:center; background:#f0fff4; padding:15px; border-radius:10px; border:1px solid #bdfecb; margin:10px 0;">
@@ -166,11 +179,13 @@
                 </div>
                 
                 <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">Enviar Pedido 📲</button>
-                <div style="text-align:center; margin-top:10px;"><a href="#" onclick="esvaziarCarrinho()" style="color:red; font-size:12px; text-decoration:none;">Limpar cesta</a></div>
+                <div style="text-align:center; margin-top:10px;"><a href="#" onclick="esvaziarCarrinho(); return false;" style="color:red; font-size:12px; text-decoration:none;">Limpar cesta</a></div>
             </div>
         </div>
     </div>
 </div>
+
+<div id="toastNotificacao" class="toast-notification">✅ Adicionado à cesta!</div>
 
 <script>
     const WHATSAPP = "5535997022323"; 
@@ -178,96 +193,118 @@
     const NOME_TITULAR = "TIA ANA SALGADOS"; 
     const CIDADE_TITULAR = "GUAXUPE"; 
 
-    // --- CARDÁPIO ATUALIZADO ---
-    const CATALOGO = {
+    
+    const CATALOGO_BRUTO = {
         "SALGADOS": [
             { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg", opcoes: ["Frita", "Congelada"], desc: "Frango" },
             { nome: "Bolinha", preco: 0.80, imagem: "bolinha.jpg", opcoes: ["Frita", "Congelada"], desc: "Queijo" },
-            { nome: "Esfirra", preco: 0.90, imagem: "esfirra.jpg", opcoes: ["Assada", "Congelada"], desc: "Carne" }
+            { nome: "Esfirra", preco: 0.90, imagem: "esfirra.jpg", opcoes: ["Assada", "Congelada"], desc: "Carne" },
+            { nome: "Empadão", preco: 18.00, imagem: "empadao.jpg", opcoes: ["Frango com Catupiry", "Palmito"], desc: "Tamanho Família" }
         ],
         "PADARIA": [
             { nome: "Kit 6 Pãezinhos", preco: 10.00, imagem: "pao.jpg", opcoes: ["Fresco"], desc: "Caseiros" },
-            
-            // Pão Grande Simples
             { nome: "Pão Grande", preco: 12.00, imagem: "pao_grande.jpg", opcoes: ["Sem Recheio"], desc: "Tradicional" },
-            
-            // Pão Grande Recheado (Ajustado conforme pedido)
             { nome: "Pão Grande Recheado", preco: 15.00, imagem: "pao_recheado.jpg", opcoes: ["Frango c/ Catupiry", "Presunto e Mussarela"], desc: "Escolha o recheio 👇" },
-            
-            { nome: "Rosca Caseira", preco: 15.00, imagem: "rosca.jpg", opcoes: ["Doce"], desc: "Tradicional" }
+            { nome: "Rosca Caseira", preco: 15.00, imagem: "rosca.jpg", opcoes: ["Doce"], desc: "Tradicional" },
+            { nome: "Bolo de Fubá", preco: 12.00, imagem: "bolo_fuba.jpg", opcoes: ["Tradicional", "Com Erva Doce"], desc: "Caseirinho" },
+            { nome: "Bolo de Farinha", preco: 12.00, imagem: "bolo_farinha.jpg", opcoes: ["Tradicional"], desc: "Simples e fofinho" },
+            { nome: "Rosca de Goiabada", preco: 20.00, imagem: "rosca_goiabada.jpg", opcoes: ["Tradicional"], desc: "Recheio generoso" },
+            { nome: "Forrózinho", preco: 15.00, imagem: "forrozinho.jpg", opcoes: ["Bandeja c/ 6 un."], desc: "Biscoito/Doce tradicional" }
         ]
     };
+
+   
+    const CATALOGO = {};
+    for (const cat in CATALOGO_BRUTO) {
+        CATALOGO[cat] = CATALOGO_BRUTO[cat].filter((item, index, self) =>
+            index === self.findIndex((t) => (t.nome === item.nome))
+        );
+    }
 
     let carrinho = []; 
     let intencaoPagamento = 'entrega'; 
     let valorFinalCalculado = 0; 
     let categoriaAtiva = "SALGADOS";
 
-    document.addEventListener("DOMContentLoaded", () => { filtrarCategoria("SALGADOS"); });
+    
+    document.addEventListener("DOMContentLoaded", () => { 
+        const carrinhoSalvo = localStorage.getItem('carrinhoTiaAna');
+        if (carrinhoSalvo) {
+            carrinho = JSON.parse(carrinhoSalvo);
+            atualizarCarrinho();
+        }
+        filtrarCategoria("SALGADOS"); 
+    });
+
+    function salvarCarrinhoNoStorage() {
+        localStorage.setItem('carrinhoTiaAna', JSON.stringify(carrinho));
+    }
+
+    function mostrarToast() {
+        const toast = document.getElementById('toastNotificacao');
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+    }
 
     function filtrarCategoria(cat) {
         categoriaAtiva = cat;
-        // Atualiza botões
         document.querySelector('.tab-salgados').classList.toggle('active', cat === 'SALGADOS');
         document.querySelector('.tab-padaria').classList.toggle('active', cat === 'PADARIA');
         
-        // Renderiza
         renderizarProdutos(CATALOGO[cat]);
         
-        // Mostra/Esconde banner de promoção (só vale pra salgados)
         document.getElementById('banner-promo').style.display = (cat === 'SALGADOS') ? 'block' : 'none';
     }
 
     function renderizarProdutos(listaProdutos) {
-        const grid = document.getElementById('gridProdutos'); grid.innerHTML = '';
+        const grid = document.getElementById('gridProdutos');
+        let htmlFragment = ''; // Usando string fragmentada para melhor performance
         
         listaProdutos.forEach((prod, index) => {
-            // Opções
             let opcoesHtml = prod.opcoes.map(op => `<option value="${op}">${op}</option>`).join('');
             
-            // Lógica de Quantidade Inteligente
-            // Se for SALGADO, mostra opções de 25 em 25. Se for PÃO, mostra unitário.
             let qtdHtml = '';
-            if(categoriaAtiva === "SALGADOS") {
+           
+            if(categoriaAtiva === "SALGADOS" && prod.nome !== "Empadão") {
                 qtdHtml = '<option value="25">25 un.</option>' + 
                           Array.from({length: 12}, (_, i) => (i+1)*25 + 25).map(i => `<option value="${i}">${i} un.</option>`).join('');
             } else {
                 qtdHtml = Array.from({length: 10}, (_, i) => i+1).map(i => `<option value="${i}">${i} un.</option>`).join('');
             }
 
-            // Ícone substituto se não tiver imagem
             let iconFallback = categoriaAtiva === "SALGADOS" ? "🍗" : "🍞";
 
-            const card = document.createElement('div'); card.className = 'product-card';
-            card.innerHTML = `
-                <div class="product-img-container">
-                    ${prod.imagem ? `<img src="${prod.imagem}" class="product-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">` : ''}
-                    <span style="display:${prod.imagem ? 'none' : 'block'}">${iconFallback}</span>
-                </div>
-                <div class="product-info">
-                    <div class="product-header">
-                        <div>
-                            <h3 class="product-title">${prod.nome}</h3>
-                            <div class="product-desc">${prod.desc}</div>
+            htmlFragment += `
+                <div class="product-card">
+                    <div class="product-img-container">
+                        ${prod.imagem ? `<img src="${prod.imagem}" class="product-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">` : ''}
+                        <span style="display:${prod.imagem ? 'none' : 'block'}">${iconFallback}</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-header">
+                            <div>
+                                <h3 class="product-title">${prod.nome}</h3>
+                                <div class="product-desc">${prod.desc}</div>
+                            </div>
                         </div>
+                        <div class="product-price">R$ ${prod.preco.toFixed(2).replace('.', ',')}</div>
+                        
+                        <div class="control-group">
+                            <span class="label-small">Opção:</span>
+                            <select id="tipo-${index}">${opcoesHtml}</select>
+                        </div>
+                        <div class="control-group">
+                            <span class="label-small">Qtd:</span>
+                            <select id="qtd-${index}">${qtdHtml}</select>
+                        </div>
+                        
+                        <button class="btn-add-card" id="btn-add-${index}" onclick="adicionar(${index})">
+                            Colocar na Cesta
+                        </button>
                     </div>
-                    <div class="product-price">R$ ${prod.preco.toFixed(2).replace('.', ',')}</div>
-                    
-                    <div class="control-group">
-                        <span class="label-small">Opção:</span>
-                        <select id="tipo-${index}">${opcoesHtml}</select>
-                    </div>
-                    <div class="control-group">
-                        <span class="label-small">Qtd:</span>
-                        <select id="qtd-${index}">${qtdHtml}</select>
-                    </div>
-                    
-                    <button class="btn-add-card" id="btn-add-${index}" onclick="adicionar(${index})">
-                        Colocar na Cesta
-                    </button>
                 </div>`;
-            grid.appendChild(card);
         });
+        grid.innerHTML = htmlFragment;
     }
 
     function adicionar(index) {
@@ -286,38 +323,41 @@
                 precoBase: produto.preco, 
                 tipo, 
                 qtd,
-                categoria: categoriaAtiva // Importante para saber se aplica desconto
+                categoria: categoriaAtiva
             });
         }
         
         atualizarCarrinho();
-        
-        // Feedback Visual
-        const btn = document.getElementById(`btn-add-${index}`);
-        const textoOriginal = btn.innerHTML;
-        btn.innerHTML = "✅ Adicionado!"; 
-        btn.style.background = "#25D366"; 
-        setTimeout(() => { btn.innerHTML = textoOriginal; btn.style.background = ""; }, 700);
-        
-        document.getElementById('floatingCart').classList.remove('hidden');
+        mostrarToast();
     }
 
-    function remover(id) { carrinho = carrinho.filter(item => item.id !== id); atualizarCarrinho(); if(carrinho.length === 0) fecharModal(); }
-    function esvaziarCarrinho() { if(confirm("Esvaziar cesta?")) { carrinho = []; atualizarCarrinho(); fecharModal(); } }
+    function remover(id) { 
+        carrinho = carrinho.filter(item => item.id !== id); 
+        atualizarCarrinho(); 
+    }
+    
+    function esvaziarCarrinho() { 
+        if(confirm("Deseja esvaziar sua cesta?")) { 
+            carrinho = []; 
+            atualizarCarrinho(); 
+            fecharModal();
+        } 
+    }
 
     function atualizarCarrinho() {
-        // Cálculo separado: Só aplica desconto de quantidade nos SALGADOS
-        let total = 0;
-        let qtdSalgados = carrinho.filter(i => i.categoria === "SALGADOS").reduce((acc, i) => acc + i.qtd, 0);
+        salvarCarrinhoNoStorage();
         
-        // Define desconto (apenas para salgados)
+        let total = 0;
+        // Não conta o Empadão para a promoção de salgados de festa
+        let qtdSalgadosFesta = carrinho.filter(i => i.categoria === "SALGADOS" && i.nome !== "Empadão").reduce((acc, i) => acc + i.qtd, 0);
+        
         let descontoSalgado = 0;
-        if (qtdSalgados >= 100) descontoSalgado = 0.10; // 10 centavos
-        else if (qtdSalgados >= 50) descontoSalgado = 0.05; // 5 centavos
+        if (qtdSalgadosFesta >= 100) descontoSalgado = 0.10; 
+        else if (qtdSalgadosFesta >= 50) descontoSalgado = 0.05; 
 
         carrinho.forEach(item => {
             let precoAplicado = item.precoBase;
-            if(item.categoria === "SALGADOS") {
+            if(item.categoria === "SALGADOS" && item.nome !== "Empadão") {
                 precoAplicado -= descontoSalgado;
             }
             total += (item.qtd * precoAplicado);
@@ -325,31 +365,44 @@
 
         valorFinalCalculado = total;
 
-        // Atualiza UI
         const formatado = total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
         document.getElementById('floatTotal').innerText = formatado;
         document.getElementById('floatCount').innerText = carrinho.length;
         document.getElementById('modalTotalValor').innerText = formatado;
         
-        const lista = document.getElementById('listaItensModal'); lista.innerHTML = '';
-        carrinho.forEach(item => {
-            let precoItem = item.precoBase;
-            if(item.categoria === "SALGADOS") precoItem -= descontoSalgado;
-            
-            lista.innerHTML += `
-            <div class="cart-item-row">
-                <div>
-                    <strong>${item.qtd}x ${item.nome}</strong> 
-                    <div style="font-size:12px; color:#888;">${item.tipo}</div>
-                </div>
-                <div style="text-align:right;">
-                    R$ ${(item.qtd * precoItem).toFixed(2)} 
-                    <span onclick="remover(${item.id})" style="color:red;cursor:pointer;margin-left:8px; font-weight:bold;">&times;</span>
-                </div>
-            </div>`;
-        });
+        const lista = document.getElementById('listaItensModal'); 
+        lista.innerHTML = '';
         
-        // Se estiver com Pix ativo, atualiza o QR
+        const stepDados = document.getElementById('step-dados');
+        const btnZap = document.getElementById('btnZapAction');
+
+        if (carrinho.length === 0) {
+            lista.innerHTML = '<div class="empty-cart-msg">Sua cesta está vazia. Que tal adicionar uns salgados ou pãezinhos? 😋</div>';
+            stepDados.style.display = 'none'; 
+            document.getElementById('floatingCart').classList.add('hidden'); 
+        } else {
+            stepDados.style.display = 'block';
+            document.getElementById('floatingCart').classList.remove('hidden');
+            btnZap.disabled = false;
+            
+            carrinho.forEach(item => {
+                let precoItem = item.precoBase;
+                if(item.categoria === "SALGADOS" && item.nome !== "Empadão") precoItem -= descontoSalgado;
+                
+                lista.innerHTML += `
+                <div class="cart-item-row">
+                    <div>
+                        <strong>${item.qtd}x ${item.nome}</strong> 
+                        <div style="font-size:12px; color:#888;">${item.tipo}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        R$ ${(item.qtd * precoItem).toFixed(2).replace('.', ',')} 
+                        <span onclick="remover(${item.id})" style="color:red;cursor:pointer;margin-left:8px; font-weight:bold; font-size: 18px;">&times;</span>
+                    </div>
+                </div>`;
+            });
+        }
+        
         if(intencaoPagamento === 'pagbank') gerarPixAutomatico();
     }
 
@@ -386,33 +439,53 @@
     
     function abrirModal() { document.getElementById('modalOverlay').classList.add('active'); }
     function fecharModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+    
+    function fecharModalFora(event) {
+        if (event.target === document.getElementById('modalOverlay')) {
+            fecharModal();
+        }
+    }
 
     function enviarZap() {
+        if (carrinho.length === 0) return alert("Sua cesta está vazia!");
+
         const nome = document.getElementById('nomeCliente').value.trim();
-        if(!nome) return alert("Digite seu nome!");
+        const endereco = document.getElementById('enderecoCliente').value.trim();
         
-        let status = intencaoPagamento === 'pagbank' ? '🟢 PAGO NO PIX' : '🔴 PAGAMENTO NA ENTREGA';
+        if(nome.length < 3) return alert("Por favor, digite seu nome completo!");
+        if(endereco.length < 5 && intencaoPagamento === 'entrega') return alert("Por favor, digite o endereço completo para entrega!");
         
-        let msg = `*PEDIDO TIA ANA* 👵%0A`;
-        msg += `👤 Cliente: ${nome}%0A`;
-        msg += `💰 Total: ${document.getElementById('modalTotalValor').innerText}%0A`;
-        msg += `STATUS: ${status}%0A%0A`;
-        msg += `*ITENS:*%0A` + carrinho.map(i => `${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
+        let status = intencaoPagamento === 'pagbank' ? '🟢 PAGO NO PIX (Conferir Comprovante)' : '🔴 PAGAMENTO NA ENTREGA';
         
+        let msg = `*🍞 PEDIDO TIA ANA 👵*%0A%0A`;
+        msg += `👤 *Cliente:* ${nome}%0A`;
+        msg += `📍 *Endereço:* ${endereco || 'Retirada no local / Não informado'}%0A`;
+        msg += `💰 *Total:* ${document.getElementById('modalTotalValor').innerText}%0A`;
+        msg += `💳 *Pagamento:* ${status}%0A%0A`;
+        msg += `*🛍️ ITENS DO PEDIDO:*%0A`;
+        
+        msg += carrinho.map(i => `▪️ ${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
+        
+        // Limpa o carrinho e o localStorage após o pedido
+        carrinho = [];
+        salvarCarrinhoNoStorage();
+        atualizarCarrinho();
+
         window.open(`https://wa.me/${WHATSAPP}?text=${msg}`, '_blank');
         fecharModal();
     }
 
-    // --- FUNÇÕES PIX ---
     function gerarPixAutomatico() {
         const imgContainer = document.getElementById('img-qr-container');
         const inputCopia = document.getElementById('cola-pix-input');
         
         const valor = valorFinalCalculado.toFixed(2);
         
-        if(valor <= 0) return;
+        if(valor <= 0) {
+            imgContainer.innerHTML = "";
+            return;
+        }
 
-        // CHAMA A FUNÇÃO TÉCNICA
         const payload = PixPayload(CHAVE_PIX_TITULAR, NOME_TITULAR, CIDADE_TITULAR, valor, "***");
         
         imgContainer.innerHTML = "";
@@ -475,5 +548,5 @@
     
     function copiarCodigoPix() { const cp = document.getElementById("cola-pix-input"); cp.select(); navigator.clipboard.writeText(cp.value); alert("Copiado! Abra o app do seu banco."); }
 </script>
-</body>
+</body> 
 </html>
