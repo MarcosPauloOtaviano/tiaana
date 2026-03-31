@@ -32,6 +32,25 @@
         .welcome-title { font-family: 'Caveat', cursive; font-size: 42px; color: #d35400; margin: 0; line-height: 1.1; }
         .welcome-text { font-size: 16px; line-height: 1.6; max-width: 600px; margin: 10px auto; color: #5d4037; }
 
+        /* BOTÃO INSTAGRAM */
+        .insta-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(220, 39, 67, 0.3);
+            transition: transform 0.2s;
+        }
+        .insta-btn:hover { transform: scale(1.05); }
+
         /* ABAS */
         .tabs-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; padding: 0 15px; }
         .tab-btn { flex: 1; max-width: 150px; padding: 12px; border: 2px solid transparent; border-radius: 25px; background: white; font-family: 'Quicksand', sans-serif; font-weight: bold; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.3s; font-size: 14px; }
@@ -125,6 +144,10 @@
             <p>chega mais, fique a vontade</p>
             <p><b>A Tia Ana cuida do sabor!</b></p>
         </div>
+        
+        <a href="https://www.instagram.com/salgadostiaana63/" target="_blank" class="insta-btn">
+             Siga nosso Instagram
+        </a>
     </div>
     
     <div class="tabs-container">
@@ -193,7 +216,6 @@
     const NOME_TITULAR = "TIA ANA SALGADOS"; 
     const CIDADE_TITULAR = "GUAXUPE"; 
 
-    
     const CATALOGO_BRUTO = {
         "SALGADOS": [
             { nome: "Coxinha", preco: 0.80, imagem: "coxinha.jpg", opcoes: ["Frita", "Congelada"], desc: "Frango" },
@@ -213,7 +235,6 @@
         ]
     };
 
-   
     const CATALOGO = {};
     for (const cat in CATALOGO_BRUTO) {
         CATALOGO[cat] = CATALOGO_BRUTO[cat].filter((item, index, self) =>
@@ -226,7 +247,6 @@
     let valorFinalCalculado = 0; 
     let categoriaAtiva = "SALGADOS";
 
-    
     document.addEventListener("DOMContentLoaded", () => { 
         const carrinhoSalvo = localStorage.getItem('carrinhoTiaAna');
         if (carrinhoSalvo) {
@@ -258,13 +278,12 @@
 
     function renderizarProdutos(listaProdutos) {
         const grid = document.getElementById('gridProdutos');
-        let htmlFragment = ''; // Usando string fragmentada para melhor performance
+        let htmlFragment = '';
         
         listaProdutos.forEach((prod, index) => {
             let opcoesHtml = prod.opcoes.map(op => `<option value="${op}">${op}</option>`).join('');
             
             let qtdHtml = '';
-           
             if(categoriaAtiva === "SALGADOS" && prod.nome !== "Empadão") {
                 qtdHtml = '<option value="25">25 un.</option>' + 
                           Array.from({length: 12}, (_, i) => (i+1)*25 + 25).map(i => `<option value="${i}">${i} un.</option>`).join('');
@@ -348,7 +367,6 @@
         salvarCarrinhoNoStorage();
         
         let total = 0;
-        // Não conta o Empadão para a promoção de salgados de festa
         let qtdSalgadosFesta = carrinho.filter(i => i.categoria === "SALGADOS" && i.nome !== "Empadão").reduce((acc, i) => acc + i.qtd, 0);
         
         let descontoSalgado = 0;
@@ -466,7 +484,6 @@
         
         msg += carrinho.map(i => `▪️ ${i.qtd}x ${i.nome} (${i.tipo})`).join('%0A');
         
-        // Limpa o carrinho e o localStorage após o pedido
         carrinho = [];
         salvarCarrinhoNoStorage();
         atualizarCarrinho();
