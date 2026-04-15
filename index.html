@@ -224,14 +224,15 @@
             { nome: "Empadão", preco: 18.00, imagem: "empadao.jpg", opcoes: ["Frango com Catupiry", "Palmito"], desc: "Tamanho Família" }
         ],
         "PADARIA": [
-            { nome: "Kit 6 Pãezinhos", preco: 10.00, imagem: "pao.jpg", opcoes: ["Fresco"], desc: "Caseiros" },
-            { nome: "Pão Grande", preco: 12.00, imagem: "pao_grande.jpg", opcoes: ["Sem Recheio"], desc: "Tradicional" },
-            { nome: "Pão Grande Recheado", preco: 15.00, imagem: "pao_recheado.jpg", opcoes: ["Frango c/ Catupiry", "Presunto e Mussarela"], desc: "Escolha o recheio 👇" },
-            { nome: "Rosca Caseira", preco: 15.00, imagem: "rosca.jpg", opcoes: ["Doce"], desc: "Tradicional" },
-            { nome: "Bolo de Fubá", preco: 12.00, imagem: "bolo_fuba.jpg", opcoes: ["Tradicional", "Com Erva Doce"], desc: "Caseirinho" },
-            { nome: "Bolo de Farinha", preco: 12.00, imagem: "bolo_farinha.jpg", opcoes: ["Tradicional"], desc: "Simples e fofinho" },
-            { nome: "Rosca de Goiabada", preco: 20.00, imagem: "rosca_goiabada.jpg", opcoes: ["Tradicional"], desc: "Recheio generoso" },
-            { nome: "Forrózinho", preco: 15.00, imagem: "forrozinho.jpg", opcoes: ["Bandeja c/ 6 un."], desc: "Biscoito/Doce tradicional" }
+           { nome: "Kit 6 Pãezinhos", preco: 15.00, imagem: "pao.jpg", opcoes: ["Fresco"], desc: "Caseiros" },
+            { nome: "Pão Grande", preco: 12.00, imagem: "pao_grande.jpg", opcoes: ["Sem Recheio"], desc: "Tradicional" },
+            // ALTERADO AQUI: Preço de 15.00 para 22.00
+            { nome: "Pão Grande Recheado", preco: 22.00, imagem: "pao_recheado.jpg", opcoes: ["Frango c/ Catupiry", "Presunto e Mussarela"], desc: "Escolha o recheio 👇" },
+            { nome: "Rosca Caseira", preco: 15.00, imagem: "rosca.jpg", opcoes: ["Doce"], desc: "Tradicional" },
+            { nome: "Bolo de Fubá", preco: 12.00, imagem: "bolo_fuba.jpg", opcoes: ["Tradicional", "Com Erva Doce"], desc: "Caseirinho" },
+            { nome: "Bolo de Farinha", preco: 12.00, imagem: "bolo_farinha.jpg", opcoes: ["Tradicional"], desc: "Simples e fofinho" },
+            { nome: "Rosca de Goiabada", preco: 20.00, imagem: "rosca_goiabada.jpg", opcoes: ["Tradicional"], desc: "Recheio generoso" },
+            { nome: "Forrózinho", preco: 15.00, imagem: "forrozinho.jpg", opcoes: ["Bandeja c/ 6 un."], desc: "Biscoito/Doce tradicional" }
         ]
     };
 
@@ -364,65 +365,79 @@
     }
 
     function atualizarCarrinho() {
-        salvarCarrinhoNoStorage();
-        
-        let total = 0;
-        let qtdSalgadosFesta = carrinho.filter(i => i.categoria === "SALGADOS" && i.nome !== "Empadão").reduce((acc, i) => acc + i.qtd, 0);
-        
-        let descontoSalgado = 0;
-        if (qtdSalgadosFesta >= 100) descontoSalgado = 0.10; 
-        else if (qtdSalgadosFesta >= 50) descontoSalgado = 0.05; 
+        salvarCarrinhoNoStorage();
+        
+        let total = 0;
+        
+        // --- LÓGICA DE DESCONTO: SALGADOS ---
+        let qtdSalgadosFesta = carrinho.filter(i => i.categoria === "SALGADOS" && i.nome !== "Empadão").reduce((acc, i) => acc + i.qtd, 0);
+        let descontoSalgado = 0;
+        if (qtdSalgadosFesta >= 100) descontoSalgado = 0.10; 
+        else if (qtdSalgadosFesta >= 50) descontoSalgado = 0.05; 
 
-        carrinho.forEach(item => {
-            let precoAplicado = item.precoBase;
-            if(item.categoria === "SALGADOS" && item.nome !== "Empadão") {
-                precoAplicado -= descontoSalgado;
-            }
-            total += (item.qtd * precoAplicado);
-        });
+        let qtdPaoRecheado = carrinho.filter(i => i.nome === "Pão Grande Recheado").reduce((acc, i) => acc + i.qtd, 0);
 
-        valorFinalCalculado = total;
+        carrinho.forEach(item => {
+            let precoAplicado = item.precoBase;
+            
+            // Aplica desconto salgado
+            if(item.categoria === "SALGADOS" && item.nome !== "Empadão") {
+                precoAplicado -= descontoSalgado;
+            }
+            
+            // Aplica desconto do Pão (se tiver 2 ou mais, o preço cai de 22 para 20)
+            if(item.nome === "Pão Grande Recheado" && qtdPaoRecheado >= 2) {
+                precoAplicado = 20.00;
+            }
+            
+            total += (item.qtd * precoAplicado);
+        });
 
-        const formatado = total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
-        document.getElementById('floatTotal').innerText = formatado;
-        document.getElementById('floatCount').innerText = carrinho.length;
-        document.getElementById('modalTotalValor').innerText = formatado;
-        
-        const lista = document.getElementById('listaItensModal'); 
-        lista.innerHTML = '';
-        
-        const stepDados = document.getElementById('step-dados');
-        const btnZap = document.getElementById('btnZapAction');
+        valorFinalCalculado = total;
 
-        if (carrinho.length === 0) {
-            lista.innerHTML = '<div class="empty-cart-msg">Sua cesta está vazia. Que tal adicionar uns salgados ou pãezinhos? 😋</div>';
-            stepDados.style.display = 'none'; 
-            document.getElementById('floatingCart').classList.add('hidden'); 
-        } else {
-            stepDados.style.display = 'block';
-            document.getElementById('floatingCart').classList.remove('hidden');
-            btnZap.disabled = false;
-            
-            carrinho.forEach(item => {
-                let precoItem = item.precoBase;
-                if(item.categoria === "SALGADOS" && item.nome !== "Empadão") precoItem -= descontoSalgado;
-                
-                lista.innerHTML += `
-                <div class="cart-item-row">
-                    <div>
-                        <strong>${item.qtd}x ${item.nome}</strong> 
-                        <div style="font-size:12px; color:#888;">${item.tipo}</div>
-                    </div>
-                    <div style="text-align:right;">
-                        R$ ${(item.qtd * precoItem).toFixed(2).replace('.', ',')} 
-                        <span onclick="remover(${item.id})" style="color:red;cursor:pointer;margin-left:8px; font-weight:bold; font-size: 18px;">&times;</span>
-                    </div>
-                </div>`;
-            });
-        }
-        
-        if(intencaoPagamento === 'pagbank') gerarPixAutomatico();
-    }
+        const formatado = total.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+        document.getElementById('floatTotal').innerText = formatado;
+        document.getElementById('floatCount').innerText = carrinho.reduce((acc, item) => acc + item.qtd, 0); // Ajuste fino: conta itens reais, não só linhas
+        document.getElementById('modalTotalValor').innerText = formatado;
+        
+        const lista = document.getElementById('listaItensModal'); 
+        lista.innerHTML = '';
+        
+        const stepDados = document.getElementById('step-dados');
+        const btnZap = document.getElementById('btnZapAction');
+
+        if (carrinho.length === 0) {
+            lista.innerHTML = '<div class="empty-cart-msg">Sua cesta está vazia. Que tal adicionar uns salgados ou pãezinhos? 😋</div>';
+            stepDados.style.display = 'none'; 
+            document.getElementById('floatingCart').classList.add('hidden'); 
+        } else {
+            stepDados.style.display = 'block';
+            document.getElementById('floatingCart').classList.remove('hidden');
+            btnZap.disabled = false;
+            
+            carrinho.forEach(item => {
+                let precoItem = item.precoBase;
+                
+                // Recalcula o preço para mostrar no modal corretamente
+                if(item.categoria === "SALGADOS" && item.nome !== "Empadão") precoItem -= descontoSalgado;
+                if(item.nome === "Pão Grande Recheado" && qtdPaoRecheado >= 2) precoItem = 20.00;
+                
+                lista.innerHTML += `
+                <div class="cart-item-row">
+                    <div>
+                        <strong>${item.qtd}x ${item.nome}</strong> 
+                        <div style="font-size:12px; color:#888;">${item.tipo}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        R$ ${(item.qtd * precoItem).toFixed(2).replace('.', ',')} 
+                        <span onclick="remover(${item.id})" style="color:red;cursor:pointer;margin-left:8px; font-weight:bold; font-size: 18px;">&times;</span>
+                    </div>
+                </div>`;
+            });
+        }
+        
+        if(intencaoPagamento === 'pagbank') gerarPixAutomatico();
+    }
 
     function selecionarIntencaoPagamento(metodo) { 
         intencaoPagamento = metodo; 
