@@ -94,48 +94,73 @@
         @keyframes scanDrop { from { top: -5px; } to { top: 100vh; } }
 
         /* ================================================================
-           HEADER / HERO
-        ================================================================ */
-        .header-container {
-            position: relative; width: 100%;
-            min-height: 85vh;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            margin-bottom: 50px; z-index: 10; overflow: hidden;
-        }
-        .header-banner {
-            position: absolute; inset: 0;
-            background-image: url('fundo.jpg');
-            background-size: cover; background-position: center;
-            filter: brightness(0.35) saturate(0.7) contrast(1.15);
-            mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
-            transform-origin: center;
-            animation: heroParallax 25s ease-in-out infinite alternate;
-        }
-        @keyframes heroParallax {
-            0%   { transform: scale(1.06) translateX(0); }
-            100% { transform: scale(1.12) translateX(-15px); }
-        }
-        /* amber flare top-left corner */
-        .header-flare {
-            position: absolute; top: -80px; left: -80px;
-            width: 400px; height: 400px; border-radius: 50%;
-            background: radial-gradient(circle, rgba(255,106,26,0.25) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        /* decorative diagonal stripe */
-        .header-stripe {
-            position: absolute; bottom: 0; left: 0; right: 0; height: 160px;
-            background: linear-gradient(to bottom right, transparent 49.5%, var(--coal) 50%);
-            pointer-events: none;
-        }
+   HEADER / HERO - AJUSTADO
+================================================================ */
+.header-container {
+    position: relative; 
+    width: 100%;
+    min-height: 85vh;
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    margin-bottom: 50px; 
+    z-index: 10; 
+    overflow: hidden;
+    background: var(--coal); /* Garante que o fundo combine com a página */
+}
 
-        .header-content {
-            position: relative; text-align: center;
-            padding: 50px 24px 60px;
-            display: flex; flex-direction: column; align-items: center;
-        }
+.header-banner {
+    position: absolute; 
+    inset: -10%; /* Aumentado para evitar bordas pretas no parallax */
+    background-image: url('fundo.jpg');
+    background-size: cover; 
+    background-position: center;
+    filter: brightness(0.4) saturate(0.8) contrast(1.1);
+    transform-origin: center;
+    animation: heroParallax 30s ease-in-out infinite alternate;
+}
+
+/* Overlay para suavizar a transição e remover o 'risco' */
+.header-banner::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 50%,
+        var(--coal) 98%
+    );
+    z-index: 1;
+}
+
+@keyframes heroParallax {
+    0%   { transform: scale(1.1) translate(0, 0); }
+    100% { transform: scale(1.2) translate(-20px, -10px); }
+}
+
+/* Ajuste na faixa diagonal para não parecer um erro de renderização */
+.header-stripe {
+    position: absolute; 
+    bottom: -2px; /* Ajuste para cobrir frestas */
+    left: 0; 
+    right: 0; 
+    height: 120px;
+    background: linear-gradient(to bottom right, transparent 49.8%, var(--coal) 50%);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.header-content {
+    position: relative; 
+    text-align: center;
+    padding: 50px 24px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center;
+    z-index: 10; /* Mantém o conteúdo acima do banner e stripe */
+}
 
         /* avatar ring */
         .avatar-vovo {
@@ -739,7 +764,7 @@
         </div>
 
         <h1 class="welcome-title">Tia Ana</h1>
-        <p class="welcome-subtitle">O Sabor que Marca Momentos</p>
+        <p class="welcome-subtitle">Salgados Artesanais</p>
         <div class="welcome-text">
             <p>Tudo feitinho com as mãos e coração.</p>
             <p>Chega mais, fique à vontade.</p>
