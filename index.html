@@ -9,23 +9,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;700&family=Bebas+Neue&display=swap" rel="stylesheet">
     
-    <script src="qrcode.min.js"></script>
-    <script onerror="console.log('Usando versão offline')" src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
         /* ================================================================
-           BRASA VIVA · Artisan Dark Editorial
-           Warm coal blacks · Liquid amber · Ember glow
+           FORNO CLARO · Padaria artesanal
+           Creme quente · Mel dourado · Massa fresca
         ================================================================ */
         :root {
-            --coal:      #0c0a08;
-            --ember:     #ff6a1a;
-            --ember-2:   #ff9500;
-            --gold:      #f5c842;
-            --cream:     #fdf6ec;
-            --ash:       #7a7068;
-            --smoke:     rgba(255,255,255,0.06);
-            --smoke-b:   rgba(255,255,255,0.11);
+            --coal:      #fff7ea;
+            --ember:     #c9631a;
+            --ember-2:   #9e4817;
+            --gold:      #d99c2b;
+            --cream:     #3a2415;
+            --ash:       #7b6550;
+            --paper:     #fffdf7;
+            --flour:     #f4dfbd;
+            --smoke:     rgba(125,82,41,0.08);
+            --smoke-b:   rgba(125,82,41,0.16);
             --green-zap: #25d366;
             --green-glow:rgba(37,211,102,0.35);
             --ease-silk: cubic-bezier(0.4, 0, 0.2, 1);
@@ -728,11 +729,210 @@
         .toast-notification.show { transform: translate(-50%, 0); opacity: 1; }
 
         /* ================================================================
+           LIGHT BAKERY THEME + PERFORMANCE TRIM
+        ================================================================ */
+        .bg-stage {
+            background:
+                radial-gradient(circle at 18% 10%, rgba(255, 222, 160, 0.52), transparent 34%),
+                linear-gradient(180deg, #fffdf7 0%, #fff7ea 54%, #f7e5c8 100%);
+        }
+        .blob, .grain, .scanline { display: none; }
+        .header-container {
+            min-height: 64vh;
+            margin-bottom: 34px;
+            background: linear-gradient(180deg, #fff4df 0%, var(--coal) 100%);
+        }
+        .header-banner {
+            filter: brightness(1.08) saturate(0.95) contrast(0.92);
+            animation: none;
+            opacity: 0.68;
+        }
+        .header-banner::after {
+            background:
+                linear-gradient(to bottom, rgba(255,247,234,0.42) 0%, rgba(255,247,234,0.68) 58%, var(--coal) 98%);
+        }
+        .avatar-vovo::before {
+            background: conic-gradient(var(--ember), #f0bd5b, var(--gold), var(--ember));
+            animation: none;
+        }
+        .avatar-vovo::after { display: none; }
+        .avatar-inner {
+            background: var(--paper);
+            border-color: var(--paper);
+            box-shadow: 0 14px 30px rgba(107, 68, 30, 0.18);
+        }
+        .welcome-title {
+            letter-spacing: 6px;
+            background: linear-gradient(135deg, #4a2b18 12%, var(--ember-2) 55%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 8px 20px rgba(255, 250, 241, 0.85));
+        }
+        .welcome-subtitle { color: var(--ember-2); }
+        .welcome-text { color: #684d37; font-weight: 400; }
+        .insta-btn, .tab-btn, .product-card, .cat-badge, .cart-float-btn, .modal-box, .modal-overlay {
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+        }
+        .insta-btn {
+            background: rgba(255, 253, 247, 0.82);
+            border-color: rgba(125, 82, 41, 0.22);
+            color: var(--ember-2);
+            box-shadow: 0 10px 28px rgba(107, 68, 30, 0.13);
+        }
+        .tabs-container {
+            margin: -8px auto 44px;
+            width: min(calc(100% - 40px), 440px);
+            padding: 0;
+        }
+        .tab-btn {
+            background: rgba(255, 253, 247, 0.9);
+            border-color: rgba(125, 82, 41, 0.15);
+            color: #82664e;
+        }
+        .tab-btn:hover {
+            color: var(--ember-2);
+            border-color: rgba(201, 99, 26, 0.26);
+        }
+        .tab-salgados.active, .tab-padaria.active {
+            background: #fff0d8;
+            color: var(--ember-2);
+            box-shadow: 0 10px 24px rgba(201, 99, 26, 0.12);
+        }
+        .promo-banner {
+            background: rgba(255, 244, 225, 0.78);
+            border-color: rgba(217, 156, 43, 0.34);
+            color: #7c4f1d;
+            margin-bottom: 32px;
+            padding: 18px 24px;
+        }
+        .promo-banner::after { display: none; }
+        .promo-banner strong, .product-title, .modal-header h2 { color: var(--cream); }
+        .product-grid { gap: 24px; }
+        .product-card {
+            background: rgba(255, 253, 247, 0.94);
+            border-color: rgba(125, 82, 41, 0.14);
+            border-radius: 18px;
+            box-shadow: 0 16px 36px rgba(107, 68, 30, 0.13);
+            content-visibility: auto;
+            contain-intrinsic-size: 430px;
+        }
+        .product-card::before, .product-card::after { display: none; }
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(201, 99, 26, 0.28);
+            box-shadow: 0 22px 44px rgba(107, 68, 30, 0.18);
+        }
+        .product-img-container {
+            background: linear-gradient(135deg, #fff0d8 0%, #f2d2a2 100%);
+        }
+        .product-img-container::after {
+            background: linear-gradient(to top, rgba(255, 248, 237, 0.88) 0%, rgba(255, 248, 237, 0.18) 45%, transparent 100%);
+        }
+        .product-img-container::before { display: none; }
+        .product-img { filter: saturate(1.02) brightness(1.04); }
+        .product-card:hover .product-img {
+            transform: scale(1.06);
+            filter: saturate(1.08) brightness(1.06);
+        }
+        .cat-badge {
+            background: rgba(255, 253, 247, 0.9);
+            border-color: rgba(125, 82, 41, 0.16);
+            color: var(--ember-2);
+        }
+        .product-price {
+            color: #fffdf7;
+            background: linear-gradient(135deg, var(--ember), var(--gold));
+            box-shadow: 0 8px 20px rgba(201, 99, 26, 0.25);
+        }
+        .product-desc, .label-small, .empty-cart-msg { color: var(--ash); }
+        .card-divider {
+            background: linear-gradient(90deg, transparent, rgba(125, 82, 41, 0.16), transparent);
+        }
+        select, .checkout-input {
+            background-color: #fffaf1;
+            border-color: rgba(125, 82, 41, 0.18);
+            color: var(--cream);
+        }
+        select option { background: #fffaf1; color: var(--cream); }
+        .btn-add-card {
+            background: #fff1dc;
+            color: var(--ember-2);
+            border-color: rgba(201, 99, 26, 0.28);
+        }
+        .btn-add-card:hover { color: #fffdf7; }
+        .cart-float-btn {
+            background: #fffdf7;
+            color: var(--cream);
+            border-color: rgba(37,211,102,0.35);
+            box-shadow: 0 14px 34px rgba(107, 68, 30, 0.18), 0 0 22px rgba(37,211,102,0.14);
+            animation: none;
+        }
+        .modal-overlay { background: rgba(72, 42, 18, 0.34); }
+        .modal-box {
+            background: #fffdf7;
+            border-color: rgba(125, 82, 41, 0.14);
+            border-radius: 22px;
+            box-shadow: 0 32px 80px rgba(72, 42, 18, 0.28);
+        }
+        .modal-header {
+            border-bottom-color: rgba(125, 82, 41, 0.12);
+        }
+        .btn-close, .pay-option {
+            background: #fff6e8;
+            border-color: rgba(125, 82, 41, 0.16);
+            color: var(--ash);
+        }
+        .btn-close:hover, .pay-option:hover {
+            background: #fff0d8;
+            color: var(--cream);
+        }
+        .cart-item-row {
+            border-bottom-color: rgba(125, 82, 41, 0.1);
+        }
+        .cart-item-row:hover { background: rgba(201, 99, 26, 0.06); }
+        .pay-option.selected {
+            background: #fff0d8;
+            color: var(--cream);
+            border-color: rgba(201, 99, 26, 0.28);
+            box-shadow: 0 8px 20px rgba(201, 99, 26, 0.1);
+        }
+        .checkout-input::placeholder { color: #927a63; }
+        .checkout-input:focus {
+            background: #fffdf7;
+            box-shadow: 0 0 0 3px rgba(201,99,26,0.14);
+        }
+        .warning-box {
+            background: #fff3d7;
+            color: #7c4f1d;
+            border-color: rgba(217, 156, 43, 0.3);
+        }
+        .toast-notification {
+            background: #fffdf7;
+            color: var(--cream);
+            border-color: rgba(201, 99, 26, 0.24);
+            box-shadow: 0 16px 40px rgba(107, 68, 30, 0.18);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ================================================================
            RESPONSIVE
         ================================================================ */
         @media (max-width: 600px) {
             .product-grid { grid-template-columns: 1fr; gap: 20px; }
             .welcome-title { letter-spacing: 4px; }
+            .tabs-container { gap: 10px; padding: 0; width: min(calc(100% - 32px), 300px); }
+            .tab-btn { max-width: none; min-width: 0; padding: 14px 12px; letter-spacing: 1.4px; }
+            .promo-banner { padding: 16px 14px; font-size: 13px; overflow-wrap: anywhere; }
             .cart-float-btn { bottom: 16px; right: 16px; padding: 12px 18px; font-size: 17px; }
             .modal-box { padding: 25px; border-radius: 24px; }
         }
@@ -759,7 +959,7 @@
     <div class="header-content">
         <div class="avatar-vovo">
             <div class="avatar-inner">
-                <img src="logo.jpg" alt="Logo Tia Ana" onerror="this.src='https://via.placeholder.com/150/0c0a08/ff6a1a?text=T.A.'">
+                <img src="logo.jpg" alt="Logo Tia Ana" width="148" height="148" fetchpriority="high" decoding="async" onerror="this.src='https://via.placeholder.com/150/fff7ea/c9631a?text=T.A.'">
             </div>
         </div>
 
@@ -784,8 +984,9 @@
 
 <div class="container" id="cardapio-area">
     <div class="promo-banner" id="banner-promo">
-        ✨ <strong>Benefício Exclusivo:</strong><br>
-        📦 A partir de 50 un: Condição especial &nbsp;·&nbsp; 📦 A partir de 100 un: Super desconto!
+        <strong>Benefício Exclusivo:</strong><br>
+        A partir de 50 un: condição especial<br>
+        A partir de 100 un: super desconto!
     </div>
     <div class="product-grid" id="gridProdutos"></div>
 </div>
@@ -840,7 +1041,7 @@
 
                 <button class="btn-finalizar" id="btnZapAction" onclick="enviarZap()">Finalizar Pedido 📲</button>
                 <div style="text-align:center; margin-top:12px;">
-                    <a href="#" onclick="esvaziarCarrinho(); return false;" style="color:rgba(255,255,255,0.2); font-size:11px; text-decoration:none; text-transform:uppercase; letter-spacing:2px; transition:color 0.3s;" onmouseover="this.style.color='rgba(255,255,255,0.5)'" onmouseout="this.style.color='rgba(255,255,255,0.2)'">Limpar Seleção</a>
+                    <a href="#" onclick="esvaziarCarrinho(); return false;" style="color:rgba(89,51,26,0.45); font-size:11px; text-decoration:none; text-transform:uppercase; letter-spacing:2px; transition:color 0.3s;" onmouseover="this.style.color='rgba(89,51,26,0.72)'" onmouseout="this.style.color='rgba(89,51,26,0.45)'">Limpar Seleção</a>
                 </div>
             </div>
         </div>
@@ -891,14 +1092,6 @@
         if (carrinhoSalvo) { carrinho = JSON.parse(carrinhoSalvo); atualizarCarrinho(); }
         filtrarCategoria("SALGADOS"); 
 
-        // spotlight cursor on cards
-        document.addEventListener('mousemove', e => {
-            document.querySelectorAll('.product-card').forEach(card => {
-                const rect = card.getBoundingClientRect();
-                card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-                card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-            });
-        });
     });
 
     function salvarCarrinhoNoStorage() { localStorage.setItem('carrinhoTiaAna', JSON.stringify(carrinho)); }
@@ -937,7 +1130,7 @@
             <div class="product-card">
                 <div class="product-img-container">
                     <span class="cat-badge">${catLabel}</span>
-                    ${prod.imagem ? `<img src="${prod.imagem}" class="product-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">` : ''}
+                    ${prod.imagem ? `<img src="${prod.imagem}" class="product-img" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">` : ''}
                     <span style="display:${prod.imagem ? 'none' : 'block'}">${iconFallback}</span>
                 </div>
                 <div class="product-info">
@@ -1023,7 +1216,7 @@
                 lista.innerHTML += `
                 <div class="cart-item-row">
                     <div>
-                        <strong style="color:#fff; font-weight:700;">${item.qtd}x ${item.nome}</strong>
+                        <strong style="color:var(--cream); font-weight:700;">${item.qtd}x ${item.nome}</strong>
                         <div style="font-size:11px; color:var(--ash); margin-top:3px;">${item.tipo}</div>
                     </div>
                     <div style="text-align:right; color:var(--cream); display:flex; align-items:center; gap:12px;">
@@ -1056,9 +1249,9 @@
             document.getElementById('optPagBank').style.background = "";
             document.getElementById('optPagBank').style.border = "";
             document.getElementById('optPagBank').style.color = "";
-            document.getElementById('optEntrega').style.background = "rgba(255,255,255,0.05)";
-            document.getElementById('optEntrega').style.border = "1px solid rgba(255,255,255,0.35)";
-            document.getElementById('optEntrega').style.color = "#fff";
+            document.getElementById('optEntrega').style.background = "#fff0d8";
+            document.getElementById('optEntrega').style.border = "1px solid rgba(201,99,26,0.28)";
+            document.getElementById('optEntrega').style.color = "var(--cream)";
             areaPix.style.display = "none";
             btnZap.innerText = "Finalizar Pedido 📲";
         }
